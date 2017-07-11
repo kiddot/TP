@@ -20,7 +20,8 @@
 package com.android.tph.util.thread;
 
 
-import com.mpush.client.ClientConfig;
+
+import com.android.tph.client.ClientConfig;
 
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionHandler;
@@ -29,11 +30,6 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by ohun on 2016/1/23.
- *
- * @author ohun@live.cn (夜色)
- */
 public final class ExecutorManager {
     public static final String THREAD_NAME_PREFIX = "mp-client-";
     public static final String WRITE_THREAD_NAME = THREAD_NAME_PREFIX + "write-t";

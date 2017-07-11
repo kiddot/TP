@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                 .setLogEnabled(BuildConfig.DEBUG)
                 .setEnableHttpProxy(true)
                 .setUserId(userId);
-        MPush.I.checkInit(getApplicationContext()).setClientConfig(cc);
+        Push.I.checkInit(getApplicationContext()).setClientConfig(cc);
     }
 
     private String getDeviceId() {
@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
 
         initPush(allocServer, userId);
 
-        M Push.I.checkInit(this.getApplication()).startPush();
+        Push.I.checkInit(this.getApplication()).startPush();
         Toast.makeText(this, "start push", Toast.LENGTH_SHORT).show();
     }
 
