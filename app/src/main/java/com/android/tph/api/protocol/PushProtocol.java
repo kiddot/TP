@@ -2,6 +2,7 @@ package com.android.tph.api.protocol;
 
 import com.android.tph.api.http.HttpRequest;
 import com.android.tph.api.http.HttpResponse;
+import com.android.tph.api.push.PushContext;
 
 import java.util.concurrent.Future;
 
