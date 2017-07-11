@@ -5,6 +5,7 @@ import com.android.tph.api.ClientListener;
 import com.android.tph.api.Constants;
 import com.android.tph.api.Logger;
 import com.android.tph.api.connection.SessionStorage;
+import com.android.tph.session.FileSessionStorage;
 import com.android.tph.util.DefaultLogger;
 
 /**
@@ -39,7 +40,7 @@ public final class ClientConfig {
     }
 
     public Client create() {
-        return new MPushClient(this);
+        return new PushClient(this);
     }
 
     /*package*/ void destroy() {

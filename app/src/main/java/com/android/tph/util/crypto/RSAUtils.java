@@ -23,6 +23,7 @@ package com.android.tph.util.crypto;
 
 
 import com.android.tph.api.Constants;
+import com.android.tph.client.ClientConfig;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;

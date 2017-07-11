@@ -6,6 +6,14 @@ import com.android.tph.api.PacketReceiver;
 import com.android.tph.api.connection.Connection;
 import com.android.tph.api.protocol.Command;
 import com.android.tph.api.protocol.Packet;
+import com.android.tph.handler.AckHandler;
+import com.android.tph.handler.ErrorMessageHandler;
+import com.android.tph.handler.FastConnectOkHandler;
+import com.android.tph.handler.HandshakeOkHandler;
+import com.android.tph.handler.HeartbeatHandler;
+import com.android.tph.handler.KickUserHandler;
+import com.android.tph.handler.OkMessageHandler;
+import com.android.tph.handler.PushMessageHandler;
 import com.android.tph.util.thread.ExecutorManager;
 
 import java.util.HashMap;
@@ -40,7 +48,31 @@ public class MessageDispatcher implements PacketReceiver {
     }
 
     @Override
-    public void onReceive(Packet packet, Connection connection) {
+    public void onReceive(final Packet packet, final Connection connection) {
+        final MessageHandler handler = handlers.get(packet.cmd);
+        if (handler != null) {
+            executor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        doAckResponse(packet);
+                        handler.handle(packet, connection);
+                    } catch (Throwable throwable) {
+                        logger.e(throwable, "handle message error, packet=%s", packet);
+                        connection.reconnect();
+                    }
+                }
+            });
+        } else {
+            logger.w("<<< receive unsupported message, packet=%s", packet);
+            //connection.reconnect();
+        }
+    }
 
+    private void doAckResponse(Packet packet) {
+        AckRequestMgr.RequestTask task = ackRequestMgr.getAndRemove(packet.sessionId);
+        if (task != null) {
+            task.success(packet);
+        }
     }
 }

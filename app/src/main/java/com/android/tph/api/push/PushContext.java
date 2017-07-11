@@ -1,13 +1,14 @@
 package com.android.tph.api.push;
 
 import com.android.tph.api.Constants;
+import com.android.tph.api.ack.AckContext;
 import com.android.tph.api.ack.AckModel;
 
 /**
  * Created by kiddo on 17-7-11.
  */
 
-public class PushContext {
+public class PushContext extends AckContext{
     public byte[] content;
     public AckModel ackModel;
 
