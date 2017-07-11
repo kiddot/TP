@@ -28,7 +28,7 @@ public enum  Command {
     GROUP(21),
     GATEWAY_GROUP(22),
     ACK(23),
-    UNKNOWN(-1);
+    UNKNOWN(-1), ;
 
     Command(int cmd) {
         this.cmd = (byte) cmd;

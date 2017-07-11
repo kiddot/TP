@@ -21,18 +21,14 @@ package com.android.tph.message;
 
 
 
-import com.mpush.api.connection.Connection;
-import com.mpush.api.protocol.Command;
-import com.mpush.api.protocol.Packet;
-import com.mpush.util.ByteBuf;
+
+import com.android.tph.api.connection.Connection;
+import com.android.tph.api.protocol.Command;
+import com.android.tph.api.protocol.Packet;
+import com.android.tph.util.ByteBuf;
 
 import java.nio.ByteBuffer;
 
-/**
- * Created by ohun on 2015/12/29.
- *
- * @author ohun@live.cn (夜色)
- */
 public final class KickUserMessage extends ByteBufMessage {
     public String deviceId;
     public String userId;
