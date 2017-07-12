@@ -37,7 +37,7 @@ public class Push {
     /*package*/ Client client;
 
     /**
-     * 获取MPUSH实例
+     * 获取PUSH实例
      *
      * @return
      */
@@ -53,7 +53,7 @@ public class Push {
     }
 
     /**
-     * 初始化MPush, 使用之前必须先初始化
+     * 初始化Push, 使用之前必须先初始化
      *
      * @param context
      */

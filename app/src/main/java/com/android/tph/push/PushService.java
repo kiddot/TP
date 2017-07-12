@@ -53,7 +53,7 @@ public class PushService extends Service implements ClientListener{
         }
         if (Push.I.hasStarted()) {
             if (PushReceiver.hasNetwork(this)) {
-                Push.I.client.start();
+                Push.I.client.start();//在这里开始进行TCP连接
             }
             PushFakeService.startForeground(this);
             // TODO : flags = START_STICKY;

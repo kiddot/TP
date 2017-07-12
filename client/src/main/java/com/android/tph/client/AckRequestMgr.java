@@ -72,7 +72,7 @@ public class AckRequestMgr {
 
     private RequestTask addTask(RequestTask task) {
         queue.put(task.sessionId, task);
-        task.future = timer.schedule(task, task.timeout, TimeUnit.MILLISECONDS);
+        task.future = timer.schedule(task, task.timeout, TimeUnit.MILLISECONDS);//定时执行周期任务
         return task;
     }
 

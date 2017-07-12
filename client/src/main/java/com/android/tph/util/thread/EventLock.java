@@ -24,11 +24,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
-/**
- * Created by ohun on 2016/1/17.
- *
- * @author ohun@live.cn (夜色)
- */
 public final class EventLock {
     private final ReentrantLock lock;
     private final Condition cond;
