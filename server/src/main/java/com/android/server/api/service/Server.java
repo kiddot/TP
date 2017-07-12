@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,21 +14,16 @@
  * limitations under the License.
  *
  * Contributors:
- *     ohun@live.cn (夜色)
+ *   ohun@live.cn (夜色)
  */
 
-package com.android.server.api.spi.common;
-
-
-import com.android.server.api.spi.SpiLoader;
+package com.android.server.api.service;
 
 /**
- * Created by ohun on 2016/12/27.
+ * Created by ohun on 2015/12/24.
  *
- * @author ohun@live.cn (夜色)
+ * @author ohun@live.cn
  */
-public interface ServiceDiscoveryFactory extends Factory<ServiceDiscovery> {
-    static ServiceDiscovery create() {
-        return SpiLoader.load(ServiceDiscoveryFactory.class).get();
-    }
+public interface Server extends Service {
+
 }

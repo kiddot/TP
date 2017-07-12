@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,21 +14,34 @@
  * limitations under the License.
  *
  * Contributors:
- *     ohun@live.cn (夜色)
+ *   ohun@live.cn (夜色)
  */
 
-package com.android.server.api.spi.common;
+package com.android.server.api.service;
 
-
-import com.android.server.api.spi.SpiLoader;
+import java.util.concurrent.CompletableFuture;
 
 /**
- * Created by ohun on 2016/12/27.
+ * Created by yxx on 2016/5/17.
  *
- * @author ohun@live.cn (夜色)
+ * @author ohun@live.cn
  */
-public interface ServiceDiscoveryFactory extends Factory<ServiceDiscovery> {
-    static ServiceDiscovery create() {
-        return SpiLoader.load(ServiceDiscoveryFactory.class).get();
-    }
+public interface Service {
+
+    void start(Listener listener);
+
+    void stop(Listener listener);
+
+    CompletableFuture<Boolean> start();
+
+    CompletableFuture<Boolean> stop();
+
+    boolean syncStart();
+
+    boolean syncStop();
+
+    void init();
+
+    boolean isRunning();
+
 }
