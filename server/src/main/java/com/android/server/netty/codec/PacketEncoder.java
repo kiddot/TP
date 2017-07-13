@@ -19,21 +19,18 @@
 
 package com.android.server.netty.codec;
 
-import com.mpush.api.protocol.Command;
-import com.mpush.api.protocol.Packet;
+import com.android.server.api.protocol.Packet;
+
 import io.netty.buffer.ByteBuf;
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 
-import static com.mpush.api.protocol.Packet.encodePacket;
+import static com.android.server.api.protocol.Packet.encodePacket;
+
 
 /**
- * Created by ohun on 2015/12/19.
  * length(4)+cmd(1)+cc(2)+flags(1)+sessionId(4)+lrc(1)+body(n)
- *
- * @author ohun@live.cn
  */
 @ChannelHandler.Sharable
 public final class PacketEncoder extends MessageToByteEncoder<Packet> {
