@@ -148,13 +148,14 @@ public final class GatewayPushMessage extends ByteBufMessage implements IPushMes
 
     @Override
     public Condition getCondition() {
-        if (condition != null) {
-            return new ScriptCondition(condition);
-        }
-        if (tags != null) {
-            return new TagsCondition(tags);
-        }
-        return AwaysPassCondition.I;
+//        if (condition != null) {
+//            return new ScriptCondition(condition);
+//        }
+//        if (tags != null) {
+//            return new TagsCondition(tags);
+//        }
+//        return AwaysPassCondition.I;
+        return null;
     }
 
 
