@@ -19,16 +19,17 @@
 
 package com.android.server.common.message;
 
-import com.mpush.api.connection.Connection;
-import com.mpush.api.protocol.JsonPacket;
-import com.mpush.api.protocol.Packet;
+import com.android.server.api.connection.Connection;
+import com.android.server.api.protocol.JsonPacket;
+import com.android.server.api.protocol.Packet;
+
 import io.netty.buffer.ByteBuf;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.mpush.api.protocol.Command.KICK;
-import static com.mpush.api.protocol.Command.PUSH;
+import static com.android.server.api.protocol.Command.KICK;
+
 
 /**
  * Created by ohun on 2015/12/29.

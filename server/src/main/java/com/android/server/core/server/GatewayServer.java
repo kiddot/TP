@@ -1,9 +1,12 @@
 package com.android.server.core.server;
 
 import com.android.server.api.protocol.Command;
+import com.android.server.api.service.Listener;
+import com.android.server.common.MessageDispatcher;
 import com.android.server.netty.server.NettyTCPServer;
 import com.android.server.tools.config.CC;
 import com.android.server.tools.thread.NamedPoolThreadFactory;
+import com.android.server.tools.thread.ThreadNames;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
@@ -20,6 +23,8 @@ import static com.android.server.tools.config.CC.mp.net.traffic_shaping.gateway_
 import static com.android.server.tools.config.CC.mp.net.traffic_shaping.gateway_client.read_global_limit;
 import static com.android.server.tools.config.CC.mp.net.traffic_shaping.gateway_client.write_channel_limit;
 import static com.android.server.tools.config.CC.mp.net.traffic_shaping.gateway_client.write_global_limit;
+import static com.android.server.tools.config.CC.mp.net.write_buffer_water_mark.gateway_server_high;
+import static com.android.server.tools.config.CC.mp.net.write_buffer_water_mark.gateway_server_low;
 import static com.android.server.tools.thread.ThreadNames.T_TRAFFIC_SHAPING;
 
 public final class GatewayServer extends NettyTCPServer {
@@ -106,8 +111,8 @@ public final class GatewayServer extends NettyTCPServer {
     @Override
     protected void initOptions(ServerBootstrap b) {
         super.initOptions(b);
-        if (snd_buf.gateway_server > 0) b.childOption(ChannelOption.SO_SNDBUF, snd_buf.gateway_server);
-        if (rcv_buf.gateway_server > 0) b.childOption(ChannelOption.SO_RCVBUF, rcv_buf.gateway_server);
+        if (CC.mp.net.snd_buf.gateway_server > 0) b.childOption(ChannelOption.SO_SNDBUF, CC.mp.net.snd_buf.gateway_server);
+        if (CC.mp.net.rcv_buf.gateway_server > 0) b.childOption(ChannelOption.SO_RCVBUF, CC.mp.net.rcv_buf.gateway_server);
         /**
          * 这个坑其实也不算坑，只是因为懒，该做的事情没做。一般来讲我们的业务如果比较小的时候我们用同步处理，等业务到一定规模的时候，一个优化手段就是异步化。
          * 异步化是提高吞吐量的一个很好的手段。但是，与异步相比，同步有天然的负反馈机制，也就是如果后端慢了，前面也会跟着慢起来，可以自动的调节。

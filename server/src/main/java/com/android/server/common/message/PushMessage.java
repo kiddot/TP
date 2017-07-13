@@ -19,23 +19,19 @@
 
 package com.android.server.common.message;
 
-import com.mpush.api.Constants;
-import com.mpush.api.connection.Connection;
-import com.mpush.api.protocol.JsonPacket;
-import com.mpush.api.protocol.Packet;
+import com.android.server.api.Constants;
+import com.android.server.api.connection.Connection;
+import com.android.server.api.protocol.JsonPacket;
+import com.android.server.api.protocol.Packet;
+
 import io.netty.channel.ChannelFutureListener;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
-import static com.mpush.api.protocol.Command.PUSH;
+import static com.android.server.api.protocol.Command.PUSH;
 
-/**
- * Created by ohun on 2015/12/30.
- *
- * @author ohun@live.cn
- */
+
 public final class PushMessage extends BaseMessage {
 
     public byte[] content;

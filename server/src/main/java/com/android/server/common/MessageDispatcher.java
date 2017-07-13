@@ -24,6 +24,7 @@ import com.android.server.api.PacketReceiver;
 import com.android.server.api.connection.Connection;
 import com.android.server.api.protocol.Command;
 import com.android.server.api.protocol.Packet;
+import com.android.server.common.message.ErrorMessage;
 import com.android.server.tools.common.Profiler;
 
 import org.slf4j.Logger;
@@ -32,6 +33,9 @@ import org.slf4j.LoggerFactory;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.android.server.common.ErrorCode.DISPATCH_ERROR;
+import static com.android.server.common.ErrorCode.UNSUPPORTED_CMD;
 
 public final class MessageDispatcher implements PacketReceiver {
     public static final int POLICY_REJECT = 2;
@@ -61,10 +65,6 @@ public final class MessageDispatcher implements PacketReceiver {
             try {
                 handler.handle(packet, connection);
             } catch (Throwable throwable) {
-                LOGGER.error("dispatch message ex, packet={}, connect={}, body={}"
-                        , packet, connection, Arrays.toString(packet.body), throwable);
-                Logs.CONN.error("dispatch message ex, packet={}, connect={}, body={}, error={}"
-                        , packet, connection, Arrays.toString(packet.body), throwable.getMessage());
                 ErrorMessage
                         .from(packet, connection)
                         .setErrorCode(DISPATCH_ERROR)
@@ -74,8 +74,6 @@ public final class MessageDispatcher implements PacketReceiver {
             }
         } else {
             if (unsupportedPolicy > POLICY_IGNORE) {
-                Logs.CONN.error("dispatch message failure, cmd={} unsupported, packet={}, connect={}, body={}"
-                        , Command.toCMD(packet.cmd), packet, connection);
                 if (unsupportedPolicy == POLICY_REJECT) {
                     ErrorMessage
                             .from(packet, connection)

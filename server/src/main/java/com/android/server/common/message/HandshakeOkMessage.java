@@ -19,20 +19,16 @@
 
 package com.android.server.common.message;
 
-import com.mpush.api.connection.Connection;
-import com.mpush.api.protocol.Command;
-import com.mpush.api.protocol.Packet;
+import com.android.server.api.connection.Connection;
+import com.android.server.api.protocol.Packet;
+
 import io.netty.buffer.ByteBuf;
 
 import java.util.Arrays;
 
-import static com.mpush.api.protocol.Command.HANDSHAKE;
+import static com.android.server.api.protocol.Command.HANDSHAKE;
 
-/**
- * Created by ohun on 2015/12/27.
- *
- * @author ohun@live.cn
- */
+
 public final class HandshakeOkMessage extends ByteBufMessage {
     public byte[] serverKey;
     public int heartbeat;
