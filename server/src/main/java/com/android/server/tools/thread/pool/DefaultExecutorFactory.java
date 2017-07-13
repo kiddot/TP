@@ -19,24 +19,20 @@
 
 package com.android.server.tools.thread.pool;
 
-import com.mpush.api.push.PushException;
-import com.mpush.api.spi.Spi;
-import com.mpush.api.spi.common.ExecutorFactory;
-import com.mpush.tools.config.CC;
-import com.mpush.tools.log.Logs;
-import com.mpush.tools.thread.NamedPoolThreadFactory;
+
+import com.android.server.api.spi.common.ExecutorFactory;
+import com.android.server.tools.thread.NamedPoolThreadFactory;
 
 import java.util.concurrent.*;
 
-import static com.mpush.tools.config.CC.mp.thread.pool.ack_timer;
-import static com.mpush.tools.config.CC.mp.thread.pool.push_client;
-import static com.mpush.tools.config.CC.mp.thread.pool.push_task;
-import static com.mpush.tools.thread.ThreadNames.*;
+import static com.android.server.tools.thread.ThreadNames.T_EVENT_BUS;
+import static com.android.server.tools.thread.ThreadNames.T_MQ;
+import static com.android.server.tools.thread.ThreadNames.T_PUSH_CLIENT_TIMER;
+
 
 /**
  * 此线程池可伸缩，线程空闲一定时间后回收，新请求重新创建线程
  */
-@Spi(order = 1)
 public final class DefaultExecutorFactory implements ExecutorFactory {
 
     private Executor get(ThreadPoolConfig config) {

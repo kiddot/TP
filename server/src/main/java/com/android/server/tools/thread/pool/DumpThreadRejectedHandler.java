@@ -19,8 +19,6 @@
 
 package com.android.server.tools.thread.pool;
 
-import com.mpush.tools.common.JVMUtil;
-import com.mpush.tools.config.CC;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,8 +26,9 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
 
-import static com.mpush.tools.thread.pool.ThreadPoolConfig.REJECTED_POLICY_ABORT;
-import static com.mpush.tools.thread.pool.ThreadPoolConfig.REJECTED_POLICY_CALLER_RUNS;
+import static com.android.server.tools.thread.pool.ThreadPoolConfig.REJECTED_POLICY_ABORT;
+import static com.android.server.tools.thread.pool.ThreadPoolConfig.REJECTED_POLICY_CALLER_RUNS;
+
 
 public final class DumpThreadRejectedHandler implements RejectedExecutionHandler {
 
