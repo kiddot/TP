@@ -2,8 +2,14 @@ package com.android.server.core.server;
 
 
 import com.android.server.api.PacketReceiver;
+import com.android.server.api.connection.Connection;
 import com.android.server.api.connection.ConnectionManager;
+import com.android.server.api.event.ConnectionCloseEvent;
+import com.android.server.api.protocol.Command;
 import com.android.server.api.protocol.Packet;
+import com.android.server.netty.connection.NettyConnection;
+import com.android.server.tools.EventBus;
+import com.android.server.tools.common.Profiler;
 import com.android.server.tools.config.CC;
 
 import io.netty.channel.ChannelHandler;
@@ -37,13 +43,13 @@ public final class ServerChannelHandler extends ChannelInboundHandlerAdapter {
         try {
             Profiler.start("time cost on [channel read]: ", packet.toString());
             Connection connection = connectionManager.get(ctx.channel());
-            LOGGER.debug("channelRead conn={}, packet={}", ctx.channel(), connection.getSessionContext(), msg);
+            LOGGER.debug("channelRead conn={}, packet={}", ctx.channel(), connection.getSessionContext());
             connection.updateLastReadTime();
             receiver.onReceive(packet, connection);
         } finally {
             Profiler.release();
             if (Profiler.getDuration() > profile_slowly_limit) {
-                Logs.PROFILE.info("Read Packet[cmd={}] Slowly: \n{}", Command.toCMD(cmd), Profiler.dump());
+                LOGGER.debug("Read Packet[cmd={}] Slowly: \n{}", Command.toCMD(cmd), Profiler.dump());
             }
             Profiler.reset();
         }
@@ -52,14 +58,14 @@ public final class ServerChannelHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         Connection connection = connectionManager.get(ctx.channel());
-        Logs.CONN.error("client caught ex, conn={}", connection);
-        LOGGER.error("caught an ex, channel={}, conn={}", ctx.channel(), connection, cause);
+        LOGGER.debug("client caught ex, conn={}", connection);
+        LOGGER.error("caught an ex, channel={}, conn={}", ctx.channel(), connection);
         ctx.close();
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        Logs.CONN.info("client connected conn={}", ctx.channel());
+        LOGGER.debug("client connected conn={}", ctx.channel());
         Connection connection = new NettyConnection();
         connection.init(ctx.channel(), security);
         connectionManager.add(connection);
@@ -69,6 +75,6 @@ public final class ServerChannelHandler extends ChannelInboundHandlerAdapter {
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         Connection connection = connectionManager.removeAndClose(ctx.channel());
         EventBus.I.post(new ConnectionCloseEvent(connection));
-        Logs.CONN.info("client disconnected conn={}", connection);
+        LOGGER.debug("client disconnected conn={}", connection);
     }
 }

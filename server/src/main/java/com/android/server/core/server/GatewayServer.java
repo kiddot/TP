@@ -1,6 +1,9 @@
 package com.android.server.core.server;
 
+import com.android.server.api.protocol.Command;
 import com.android.server.netty.server.NettyTCPServer;
+import com.android.server.tools.config.CC;
+import com.android.server.tools.thread.NamedPoolThreadFactory;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
@@ -11,6 +14,13 @@ import io.netty.handler.traffic.GlobalChannelTrafficShapingHandler;
 import java.nio.channels.spi.SelectorProvider;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+
+import static com.android.server.tools.config.CC.mp.net.traffic_shaping.gateway_client.check_interval;
+import static com.android.server.tools.config.CC.mp.net.traffic_shaping.gateway_client.read_channel_limit;
+import static com.android.server.tools.config.CC.mp.net.traffic_shaping.gateway_client.read_global_limit;
+import static com.android.server.tools.config.CC.mp.net.traffic_shaping.gateway_client.write_channel_limit;
+import static com.android.server.tools.config.CC.mp.net.traffic_shaping.gateway_client.write_global_limit;
+import static com.android.server.tools.thread.ThreadNames.T_TRAFFIC_SHAPING;
 
 public final class GatewayServer extends NettyTCPServer {
     private static GatewayServer I;
