@@ -1,7 +1,7 @@
 package com.android.server.api.spi;
 
 
-import com.android.server.api.common.Condition;
+import java.util.concurrent.locks.Condition;
 
 public interface IPushMessage {
 

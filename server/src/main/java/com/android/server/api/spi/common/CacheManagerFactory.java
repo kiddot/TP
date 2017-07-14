@@ -24,7 +24,7 @@ import com.android.server.api.spi.Factory;
 import com.android.server.api.spi.SpiLoader;
 
 public interface CacheManagerFactory extends Factory<CacheManager> {
-    static CacheManager create() {
-        return SpiLoader.load(CacheManagerFactory.class).get();
-    }
+//    static CacheManager create() {
+//        return SpiLoader.load(CacheManagerFactory.class).get();
+//    }
 }

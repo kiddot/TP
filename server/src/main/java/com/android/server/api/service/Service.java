@@ -19,7 +19,8 @@
 
 package com.android.server.api.service;
 
-import java.util.concurrent.CompletableFuture;
+import com.google.common.util.concurrent.ListenableFuture;
+
 
 /**
  * Created by yxx on 2016/5/17.
@@ -32,9 +33,9 @@ public interface Service {
 
     void stop(Listener listener);
 
-    CompletableFuture<Boolean> start();
+    FutureListener start();
 
-    CompletableFuture<Boolean> stop();
+    FutureListener stop();
 
     boolean syncStart();
 

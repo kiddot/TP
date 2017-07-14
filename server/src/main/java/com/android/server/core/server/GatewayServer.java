@@ -1,12 +1,12 @@
 package com.android.server.core.server;
 
 import com.android.server.api.protocol.Command;
+import com.android.server.api.service.FutureListener;
 import com.android.server.api.service.Listener;
 import com.android.server.common.MessageDispatcher;
 import com.android.server.core.handler.GatewayPushHandler;
 import com.android.server.netty.server.NettyTCPServer;
 import com.android.server.tools.config.CC;
-import com.android.server.tools.thread.NamedPoolThreadFactory;
 import com.android.server.tools.thread.ThreadNames;
 
 import io.netty.bootstrap.ServerBootstrap;
@@ -16,17 +16,8 @@ import io.netty.channel.udt.nio.NioUdtProvider;
 import io.netty.handler.traffic.GlobalChannelTrafficShapingHandler;
 
 import java.nio.channels.spi.SelectorProvider;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-import static com.android.server.tools.config.CC.mp.net.traffic_shaping.gateway_client.check_interval;
-import static com.android.server.tools.config.CC.mp.net.traffic_shaping.gateway_client.read_channel_limit;
-import static com.android.server.tools.config.CC.mp.net.traffic_shaping.gateway_client.read_global_limit;
-import static com.android.server.tools.config.CC.mp.net.traffic_shaping.gateway_client.write_channel_limit;
-import static com.android.server.tools.config.CC.mp.net.traffic_shaping.gateway_client.write_global_limit;
-import static com.android.server.tools.config.CC.mp.net.write_buffer_water_mark.gateway_server_high;
-import static com.android.server.tools.config.CC.mp.net.write_buffer_water_mark.gateway_server_low;
-import static com.android.server.tools.thread.ThreadNames.T_TRAFFIC_SHAPING;
 
 public final class GatewayServer extends NettyTCPServer {
     private static GatewayServer I;
@@ -48,7 +39,7 @@ public final class GatewayServer extends NettyTCPServer {
     }
 
     private GatewayServer() {
-        super(CC.mp.net.gateway_server_port);
+        super(CC.getInstance().getGateway_server_port());
     }
 
     @Override
@@ -59,14 +50,14 @@ public final class GatewayServer extends NettyTCPServer {
         connectionManager = new ServerConnectionManager(false);
         channelHandler = new ServerChannelHandler(false, connectionManager, receiver);
 
-        if (CC.mp.net.traffic_shaping.gateway_server.enabled) {//启用流量整形，限流
-            trafficShapingExecutor = Executors.newSingleThreadScheduledExecutor(new NamedPoolThreadFactory(T_TRAFFIC_SHAPING));
-            trafficShapingHandler = new GlobalChannelTrafficShapingHandler(
-                    trafficShapingExecutor,
-                    write_global_limit, read_global_limit,
-                    write_channel_limit, read_channel_limit,
-                    check_interval);
-        }
+//        if (CC.getInstance().gett.traffic_shaping.gateway_server.enabled) {//启用流量整形，限流
+//            trafficShapingExecutor = Executors.newSingleThreadScheduledExecutor(new NamedPoolThreadFactory(T_TRAFFIC_SHAPING));
+//            trafficShapingHandler = new GlobalChannelTrafficShapingHandler(
+//                    trafficShapingExecutor,
+//                    write_global_limit, read_global_limit,
+//                    write_channel_limit, read_channel_limit,
+//                    check_interval);
+//        }
     }
 
     @Override
@@ -79,6 +70,26 @@ public final class GatewayServer extends NettyTCPServer {
         if (connectionManager != null) {
             connectionManager.destroy();
         }
+    }
+
+    @Override
+    public FutureListener start() {
+        return null;
+    }
+
+    @Override
+    public FutureListener stop() {
+        return null;
+    }
+
+    @Override
+    public boolean syncStart() {
+        return false;
+    }
+
+    @Override
+    public boolean syncStop() {
+        return false;
     }
 
     @Override
@@ -98,7 +109,7 @@ public final class GatewayServer extends NettyTCPServer {
 
     @Override
     protected int getWorkThreadNum() {
-        return CC.mp.thread.pool.gateway_server_work;
+        return CC.getInstance().getGateway_server_work();
     }
 
     @Override
@@ -112,8 +123,8 @@ public final class GatewayServer extends NettyTCPServer {
     @Override
     protected void initOptions(ServerBootstrap b) {
         super.initOptions(b);
-        if (CC.mp.net.snd_buf.gateway_server > 0) b.childOption(ChannelOption.SO_SNDBUF, CC.mp.net.snd_buf.gateway_server);
-        if (CC.mp.net.rcv_buf.gateway_server > 0) b.childOption(ChannelOption.SO_RCVBUF, CC.mp.net.rcv_buf.gateway_server);
+//        if (CC.mp.net.snd_buf.gateway_server > 0) b.childOption(ChannelOption.SO_SNDBUF, CC.mp.net.snd_buf.gateway_server);
+//        if (CC.mp.net.rcv_buf.gateway_server > 0) b.childOption(ChannelOption.SO_RCVBUF, CC.mp.net.rcv_buf.gateway_server);
         /**
          * 这个坑其实也不算坑，只是因为懒，该做的事情没做。一般来讲我们的业务如果比较小的时候我们用同步处理，等业务到一定规模的时候，一个优化手段就是异步化。
          * 异步化是提高吞吐量的一个很好的手段。但是，与异步相比，同步有天然的负反馈机制，也就是如果后端慢了，前面也会跟着慢起来，可以自动的调节。
@@ -132,11 +143,11 @@ public final class GatewayServer extends NettyTCPServer {
          * 当buffer的大小低于低水位线的时候，isWritable就会变成true。所以应用应该判断isWritable，如果是false就不要再写数据了。
          * 高水位线和低水位线是字节数，默认高水位是64K，低水位是32K，我们可以根据我们的应用需要支持多少连接数和系统资源进行合理规划。
          */
-        if (gateway_server_low > 0 && gateway_server_high > 0) {
-            b.childOption(ChannelOption.WRITE_BUFFER_WATER_MARK, new WriteBufferWaterMark(
-                    gateway_server_low, gateway_server_high
-            ));
-        }
+//        if (gateway_server_low > 0 && gateway_server_high > 0) {
+//            b.childOption(ChannelOption.WRITE_BUFFER_WATER_MARK, new WriteBufferWaterMark(
+//                    gateway_server_low, gateway_server_high
+//            ));
+//        }
     }
 
     @Override
@@ -146,17 +157,17 @@ public final class GatewayServer extends NettyTCPServer {
 
     @Override
     public ChannelFactory<? extends ServerChannel> getChannelFactory() {
-        if (CC.mp.net.tcpGateway()) return super.getChannelFactory();
-        if (CC.mp.net.udtGateway()) return NioUdtProvider.BYTE_ACCEPTOR;
-        if (CC.mp.net.sctpGateway()) return NioSctpServerChannel::new;
+        if (CC.getInstance().tcpGateway()) return super.getChannelFactory();
+        if (CC.getInstance().udtGateway()) return NioUdtProvider.BYTE_ACCEPTOR;
+        //if (CC.mp.net.sctpGateway()) return NioSctpServerChannel::new;
         return super.getChannelFactory();
     }
 
     @Override
     public SelectorProvider getSelectorProvider() {
-        if (CC.mp.net.tcpGateway()) return super.getSelectorProvider();
-        if (CC.mp.net.udtGateway()) return NioUdtProvider.BYTE_PROVIDER;
-        if (CC.mp.net.sctpGateway()) return super.getSelectorProvider();
+        if (CC.getInstance().tcpGateway()) return super.getSelectorProvider();
+        if (CC.getInstance().udtGateway()) return NioUdtProvider.BYTE_PROVIDER;
+        //if (CC.mp.net.sctpGateway()) return super.getSelectorProvider();
         return super.getSelectorProvider();
     }
 }

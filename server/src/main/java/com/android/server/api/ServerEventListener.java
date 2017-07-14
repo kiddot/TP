@@ -20,6 +20,12 @@
 package com.android.server.api;
 
 
+import com.android.server.api.event.KickUserEvent;
+import com.android.server.api.event.ServerShutdownEvent;
+import com.android.server.api.event.ServerStartupEvent;
+import com.android.server.api.event.UserOfflineEvent;
+import com.android.server.api.event.UserOnlineEvent;
+
 /**
  * Created by ohun on 16/10/19.
  *
@@ -27,21 +33,21 @@ package com.android.server.api;
  */
 public interface ServerEventListener {
 
-    default void on(ServerStartupEvent event) {
-    }
-
-    default void on(ServerShutdownEvent server) {
-    }
-
-    default void on(RouterChangeEvent event) {
-    }
-
-    default void on(KickUserEvent event) {
-    }
-
-    default void on(UserOnlineEvent event) {
-    }
-
-    default void on(UserOfflineEvent event) {
-    }
+//    default void on(ServerStartupEvent event) {
+//    }
+//
+//    default void on(ServerShutdownEvent server) {
+//    }
+//
+//    default void on(RouterChangeEvent event) {
+//    }
+//
+//    default void on(KickUserEvent event) {
+//    }
+//
+//    default void on(UserOnlineEvent event) {
+//    }
+//
+//    default void on(UserOfflineEvent event) {
+//    }
 }

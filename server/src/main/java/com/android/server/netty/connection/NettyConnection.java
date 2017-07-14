@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 
 public final class NettyConnection implements Connection, ChannelFutureListener {
     private static final Logger LOGGER = LoggerFactory.getLogger(NettyConnection.class);
-    private static final Cipher RSA_CIPHER = CipherFactory.create();
+    //private static final Cipher RSA_CIPHER = CipherFactory.create();
     private SessionContext context;
     private Channel channel;
     private volatile byte status = STATUS_NEW;
@@ -28,7 +28,7 @@ public final class NettyConnection implements Connection, ChannelFutureListener 
         this.lastReadTime = System.currentTimeMillis();
         this.status = STATUS_CONNECTED;
         if (security) {
-            this.context.changeCipher(RSA_CIPHER);
+            //this.context.changeCipher(RSA_CIPHER);
         }
     }
 

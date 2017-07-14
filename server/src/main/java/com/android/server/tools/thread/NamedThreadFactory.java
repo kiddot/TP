@@ -22,13 +22,8 @@ package com.android.server.tools.thread;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.mpush.tools.thread.ThreadNames.THREAD_NAME_PREFIX;
+import static com.android.server.tools.thread.ThreadNames.THREAD_NAME_PREFIX;
 
-/**
- * Created by xiaoxu.yxx on 2015/7/19.
- *
- * @author ohun@live.cn (夜色)
- */
 public final class NamedThreadFactory implements ThreadFactory {
     private final AtomicInteger threadNumber = new AtomicInteger(1);
     private final String namePrefix;

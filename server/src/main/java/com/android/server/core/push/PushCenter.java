@@ -2,6 +2,7 @@ package com.android.server.core.push;
 
 import com.android.server.api.connection.Connection;
 import com.android.server.api.service.BaseService;
+import com.android.server.api.service.FutureListener;
 import com.android.server.api.service.Listener;
 import com.android.server.api.spi.IPushMessage;
 import com.android.server.api.spi.push.MessagePusher;
@@ -14,9 +15,6 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static com.android.server.tools.config.CC.mp.push.flow_control.global.duration;
-import static com.android.server.tools.config.CC.mp.push.flow_control.global.limit;
-import static com.android.server.tools.config.CC.mp.thread.pool.event_bus.max;
 
 public final class PushCenter extends BaseService implements MessagePusher {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -57,8 +55,8 @@ public final class PushCenter extends BaseService implements MessagePusher {
 
     @Override
     protected void doStart(Listener listener) throws Throwable {
-        if (CC.mp.net.udpGateway() || CC.mp.thread.pool.push_task > 0) {
-            executor = new CustomJDKExecutor(ThreadPoolManager.I.getPushTaskTimer());
+        if (CC.getInstance().udpGateway() || CC.getInstance().getPush_task() > 0) {
+            //executor = new CustomJDKExecutor(ThreadPoolManager.I.getPushTaskTimer());
         } else {//实际情况使用EventLoo并没有更快，还有待测试
             executor = new NettyEventLoopExecutor();
         }
@@ -75,6 +73,36 @@ public final class PushCenter extends BaseService implements MessagePusher {
         //AckTaskQueue.I.stop();
         logger.info("push center stop success");
         listener.onSuccess();
+    }
+
+    @Override
+    public void start(Listener listener) {
+
+    }
+
+    @Override
+    public void stop(Listener listener) {
+
+    }
+
+    @Override
+    public FutureListener start() {
+        return null;
+    }
+
+    @Override
+    public FutureListener stop() {
+        return null;
+    }
+
+    @Override
+    public boolean syncStart() {
+        return false;
+    }
+
+    @Override
+    public boolean syncStop() {
+        return false;
     }
 
 //    public PushListener<IPushMessage> getPushListener() {

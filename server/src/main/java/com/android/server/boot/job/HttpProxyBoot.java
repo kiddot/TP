@@ -7,10 +7,10 @@ public final class HttpProxyBoot extends BootJob {
 
     @Override
     protected void start() {
-        if (CC.mp.http.proxy_enabled) {
-            //NettyHttpClient.I().syncStart();
-            DnsMappingManager.create().start();
-        }
+//        if (CC.mp.http.proxy_enabled) {
+//            //NettyHttpClient.I().syncStart();
+//            DnsMappingManager.create().start();
+//        }
 
         startNext();
     }
@@ -18,9 +18,9 @@ public final class HttpProxyBoot extends BootJob {
     @Override
     protected void stop() {
         stopNext();
-        if (CC.mp.http.proxy_enabled) {
-            //NettyHttpClient.I().syncStop();
-            DnsMappingManager.create().stop();
-        }
+//        if (CC.mp.http.proxy_enabled) {
+//            //NettyHttpClient.I().syncStop();
+//            DnsMappingManager.create().stop();
+//        }
     }
 }

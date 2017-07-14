@@ -6,20 +6,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public interface Logs {
-    boolean logInit = init();
+public class Logs {
+    static boolean logInit = init();
 
-    static boolean init() {
+    public static boolean init() {
         if (logInit) return true;
-        System.setProperty("log.home", CC.mp.log_dir);
-        System.setProperty("log.root.level", CC.mp.log_level);
+        System.setProperty("log.home", CC.getInstance().getmLogPath());
+        System.setProperty("log.root.level", CC.getInstance().getmLogLevel());
         LoggerFactory
                 .getLogger("console")
-                .info(CC.mp.cfg.root().render(ConfigRenderOptions.concise().setFormatted(true)));
+                .info(CC.getInstance().getMpRoot().render(ConfigRenderOptions.concise().setFormatted(true)));
         return true;
     }
 
-    Logger Console = LoggerFactory.getLogger("console"),
+    public static Logger Console = LoggerFactory.getLogger("console"),
 
     CONN = LoggerFactory.getLogger("mpush.conn.log"),
 

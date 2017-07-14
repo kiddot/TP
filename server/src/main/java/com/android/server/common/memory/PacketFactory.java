@@ -6,12 +6,15 @@ import com.android.server.api.protocol.Packet;
 import com.android.server.api.protocol.UDPPacket;
 import com.android.server.tools.config.CC;
 
-public interface PacketFactory {
-    PacketFactory FACTORY = CC.mp.net.udpGateway() ? UDPPacket::new : Packet::new;
+public class PacketFactory {
+    //PacketFactory FACTORY = CC.getInstance().udpGateway() ? new UDPPacket() : new Packet();
 
-    static Packet get(Command command) {
-        return FACTORY.create(command);
+    public static Packet get(Command command) {
+        if (CC.getInstance().udpGateway()){
+            return new UDPPacket(command);
+        }else {
+            return new Packet(command);
+        }
     }
 
-    Packet create(Command command);
 }

@@ -30,12 +30,6 @@ import java.util.Map;
 
 import static com.android.server.api.protocol.Command.KICK;
 
-
-/**
- * Created by ohun on 2015/12/29.
- *
- * @author ohun@live.cn
- */
 public class KickUserMessage extends ByteBufMessage {
     public String deviceId;
     public String userId;
@@ -65,7 +59,7 @@ public class KickUserMessage extends ByteBufMessage {
     }
 
     @Override
-    protected Map<String, Object> encodeJsonBody() {
+    protected Map<String, String> encodeJsonBody() {
         Map<String, Object> body = new HashMap<>(2);
         body.put("deviceId", deviceId);
         body.put("userId", userId);

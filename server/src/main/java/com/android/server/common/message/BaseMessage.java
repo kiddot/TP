@@ -114,7 +114,7 @@ public abstract class BaseMessage implements Message {
         Profiler.release();
         if (tmp != null && tmp.length > 0) {
             //1.压缩
-            if (tmp.length > CC.mp.core.compress_threshold) {
+            if (tmp.length > CC.getInstance().getCompress_threshold()) {
                 byte[] result = IOUtils.compress(tmp);
                 if (result.length > 0) {
                     tmp = result;
@@ -172,7 +172,7 @@ public abstract class BaseMessage implements Message {
 
     }
 
-    protected Map<String, Object> encodeJsonBody() {
+    protected Map<String, String> encodeJsonBody() {
         return null;
     }
 

@@ -23,7 +23,7 @@ public final class ServerChannelHandler extends ChannelInboundHandlerAdapter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ServerChannelHandler.class);
 
-    private static final long profile_slowly_limit = CC.mp.monitor.profile_slowly_duration.toMillis();
+    private static final long profile_slowly_limit = CC.getInstance().getProfile_slowly_duration();
 
     private final boolean security; //是否启用加密
     private final ConnectionManager connectionManager;

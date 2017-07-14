@@ -31,12 +31,12 @@ public abstract class BootJob {
         return next;
     }
 
-    public BootJob setNext(Supplier<BootJob> next, boolean enabled) {
-        if (enabled) {
-            return setNext(next.get());
-        }
-        return this;
-    }
+//    public BootJob setNext(Supplier<BootJob> next, boolean enabled) {
+//        if (enabled) {
+//            return setNext(next.get());
+//        }
+//        return this;
+//    }
 
     protected String getNextName() {
         return next.getName();

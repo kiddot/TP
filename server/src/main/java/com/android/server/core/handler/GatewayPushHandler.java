@@ -18,6 +18,6 @@ public final class GatewayPushHandler extends BaseMessageHandler<GatewayPushMess
 
     @Override
     public void handle(GatewayPushMessage message) {
-        PushCenter.I.push(message);
+        PushCenter.I.push(message, mConnection);
     }
 }

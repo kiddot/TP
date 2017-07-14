@@ -51,9 +51,9 @@ public final class SessionContext {
     }
 
     public int getClientType() {
-        if (clientType == 0) {
-            clientType = (byte) ClientClassifier.I.getClientType(osName);
-        }
+//        if (clientType == 0) {
+//            clientType = (byte) ClientClassifier.I.getClientType(osName);
+//        }
         return clientType;
     }
 

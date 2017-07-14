@@ -19,15 +19,9 @@
 
 package com.android.server.api.spi.common;
 
-import com.mpush.api.spi.SpiLoader;
 
 import java.util.concurrent.Executor;
 
-/**
- * Created by yxx on 2016/5/20.
- *
- * @author ohun@live.cn
- */
 public interface ExecutorFactory {
     String PUSH_CLIENT = "pc";
     String PUSH_TASK = "pt";
@@ -37,7 +31,7 @@ public interface ExecutorFactory {
 
     Executor get(String name);
 
-    static ExecutorFactory create() {
-        return SpiLoader.load(ExecutorFactory.class);
-    }
+//    static ExecutorFactory create() {
+//        return SpiLoader.load(ExecutorFactory.class);
+//    }
 }

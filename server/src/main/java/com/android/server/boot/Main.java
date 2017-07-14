@@ -27,18 +27,12 @@ public class Main {
      *
      * @param launcher
      */
-    private static void addHook(ServerLauncher launcher) {
-        Runtime.getRuntime().addShutdownHook(
-                new Thread(() -> {
-
-                    try {
-                        launcher.stop();
-                    } catch (Exception e) {
-                        Logs.Console.error("mpush server stop ex", e);
-                    }
-                    Logs.Console.info("jvm exit, all service stopped.");
-
-                }, "mpush-shutdown-hook-thread")
-        );
+    private static void addHook(final ServerLauncher launcher) {
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            @Override
+            public void run() {
+                launcher.stop();
+            }
+        }));
     }
 }

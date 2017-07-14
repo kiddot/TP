@@ -14,6 +14,7 @@ import io.netty.util.HashedWheelTimer;
 import io.netty.util.Timeout;
 import io.netty.util.TimerTask;
 
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -23,19 +24,21 @@ public final class ServerConnectionManager implements ConnectionManager {
     private final Map<ChannelId, ConnectionHolder> connections = new ConcurrentHashMap<>();
     private final ConnectionHolder DEFAULT = new SimpleConnectionHolder(null);
     private final boolean heartbeatCheck;
-    private final ConnectionHolderFactory holderFactory;
+    //private final ConnectionHolderFactory holderFactory;
     private HashedWheelTimer timer;
+    private boolean isHeartbeatCheck ;
 
     public ServerConnectionManager(boolean heartbeatCheck) {
         this.heartbeatCheck = heartbeatCheck;
-        this.holderFactory = heartbeatCheck ? HeartbeatCheckTask::new : SimpleConnectionHolder::new;
+        isHeartbeatCheck = heartbeatCheck;
+        //this.holderFactory = heartbeatCheck ? HeartbeatCheckTask::new : SimpleConnectionHolder::new;
     }
 
     @Override
     public void init() {
         if (heartbeatCheck) {
             long tickDuration = TimeUnit.SECONDS.toMillis(1);//1s 每秒钟走一步，一个心跳周期内大致走一圈
-            int ticksPerWheel = (int) (CC.mp.core.max_heartbeat / tickDuration);
+            int ticksPerWheel = (int) (CC.getInstance().getMax_heartbeat() / tickDuration);
             this.timer = new HashedWheelTimer(
                     new NamedThreadFactory(ThreadNames.T_CONN_TIMER),
                     tickDuration, TimeUnit.MILLISECONDS, ticksPerWheel
@@ -48,18 +51,32 @@ public final class ServerConnectionManager implements ConnectionManager {
         if (timer != null) {
             timer.stop();
         }
-        connections.values().forEach(ConnectionHolder::close);
+        //connections.values().forEach(ConnectionHolder::close);
+        Iterator it = connections.values().iterator();
+
+        while (it.hasNext()) {
+            ConnectionHolder connectionHolder = (ConnectionHolder) it.next();
+            connectionHolder.close();
+        }
+
         connections.clear();
     }
 
     @Override
     public Connection get(Channel channel) {
-        return connections.getOrDefault(channel.id(), DEFAULT).get();
+        if (!connections.containsKey(channel.id())){
+            return DEFAULT.get();
+        }
+        return connections.get(channel.id()).get();
     }
 
     @Override
     public void add(Connection connection) {
-        connections.putIfAbsent(connection.getChannel().id(), holderFactory.create(connection));
+        if (connections.containsKey(connection.getChannel().id())){
+            return;
+        }else {
+            connections.put(connection.getChannel().id(), create(connection, isHeartbeatCheck));
+        }
     }
 
     @Override
@@ -139,7 +156,7 @@ public final class ServerConnectionManager implements ConnectionManager {
             }
 
             if (connection.isReadTimeout()) {
-                if (++timeoutTimes > CC.mp.core.max_hb_timeout_times) {
+                if (++timeoutTimes > CC.getInstance().getMax_hb_timeout_times()) {
                     connection.close();
                     //Logs.HB.warn("client heartbeat timeout times={}, do close conn={}", timeoutTimes, connection);
                     return;
@@ -166,8 +183,12 @@ public final class ServerConnectionManager implements ConnectionManager {
         }
     }
 
-    @FunctionalInterface
-    private interface ConnectionHolderFactory {
-        ConnectionHolder create(Connection connection);
+    private ConnectionHolder create(Connection connection, boolean heartbeat){
+        if (heartbeat){
+            return new HeartbeatCheckTask(connection);
+        }else {
+            return new SimpleConnectionHolder(connection);
+        }
     }
+
 }

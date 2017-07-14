@@ -30,7 +30,7 @@ import com.android.server.api.spi.SpiLoader;
  */
 public interface JsonFactory extends Factory<Json> {
 
-    static Json create() {
-        return SpiLoader.load(JsonFactory.class).get();
-    }
+//    static Json create() {
+//        return SpiLoader.load(JsonFactory.class).get();
+//    }
 }

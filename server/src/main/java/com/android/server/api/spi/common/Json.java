@@ -25,7 +25,7 @@ package com.android.server.api.spi.common;
  * @author ohun@live.cn (夜色)
  */
 public interface Json {
-    Json JSON = JsonFactory.create();
+    //Json JSON = ;
 
     <T> T fromJson(String json, Class<T> clazz);
 

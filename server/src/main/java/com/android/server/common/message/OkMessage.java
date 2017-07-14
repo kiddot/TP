@@ -11,11 +11,6 @@ import java.util.Map;
 import static com.android.server.api.protocol.Command.OK;
 
 
-/**
- * Created by ohun on 2015/12/28.
- *
- * @author ohun@live.cn
- */
 public final class OkMessage extends ByteBufMessage {
     public byte cmd;
     public byte code;
@@ -45,7 +40,7 @@ public final class OkMessage extends ByteBufMessage {
     }
 
     @Override
-    public Map<String, Object> encodeJsonBody() {
+    public Map<String, String> encodeJsonBody() {
         Map<String, Object> body = new HashMap<>(3);
         if (cmd > 0) body.put("cmd", cmd);
         if (code > 0) body.put("code", code);

@@ -32,6 +32,8 @@ import io.netty.channel.epoll.Native;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.util.concurrent.DefaultThreadFactory;
+import io.netty.util.concurrent.Future;
+import io.netty.util.concurrent.GenericFutureListener;
 
 /**
  * Created by kiddo on 17-7-12.
@@ -91,7 +93,7 @@ public abstract class NettyTCPServer extends BaseService implements Server{
         }
     }
 
-    private void createServer(Listener listener, EventLoopGroup boss, EventLoopGroup work, ChannelFactory<? extends ServerChannel> channelFactory) {
+    private void createServer(final Listener listener, EventLoopGroup boss, EventLoopGroup work, ChannelFactory<? extends ServerChannel> channelFactory) {
         /***
          * NioEventLoopGroup 是用来处理I/O操作的多线程事件循环器，
          * Netty提供了许多不同的EventLoopGroup的实现用来处理不同传输协议。
@@ -145,16 +147,19 @@ public abstract class NettyTCPServer extends BaseService implements Server{
             /***
              * 绑定端口并启动去接收进来的连接
              */
-            b.bind(port).addListener(future -> {
-                if (future.isSuccess()) {
-                    serverState.set(State.Started);
-                    logger.info("server start success on:{}", port);
-                    if (listener != null) listener.onSuccess(port);
-                } else {
-                    logger.error("server start failure on:{}", port, future.cause());
-                    if (listener != null) listener.onFailure(future.cause());
+            b.bind(port).addListener(new GenericFutureListener<Future<? super Void>>() {
+                @Override
+                public void operationComplete(Future<? super Void> future) throws Exception {
+                    if (future.isSuccess()) {
+                        serverState.set(State.Started);
+                        logger.info("server start success on:{}", port);
+                        if (listener != null) listener.onSuccess(port);
+                    } else {
+                        logger.error("server start failure on:{}", port, future.cause());
+                        if (listener != null) listener.onFailure(future.cause());
+                    }
                 }
-            });
+            }).sync();
         } catch (Exception e) {
             logger.error("server start exception", e);
             if (listener != null) listener.onFailure(e);
@@ -197,7 +202,12 @@ public abstract class NettyTCPServer extends BaseService implements Server{
             workerGroup = epollEventLoopGroup;
         }
 
-        createServer(listener, bossGroup, workerGroup, EpollServerSocketChannel::new);
+        createServer(listener, bossGroup, workerGroup, new ChannelFactory<ServerChannel>() {
+            @Override
+            public ServerChannel newChannel() {
+                return new EpollServerSocketChannel();
+            }
+        });
     }
 
     /***
@@ -281,14 +291,14 @@ public abstract class NettyTCPServer extends BaseService implements Server{
     }
 
     protected boolean useNettyEpoll() {
-        if (CC.mp.core.useNettyEpoll()) {
-            try {
-                Native.offsetofEpollData();
-                return true;
-            } catch (UnsatisfiedLinkError error) {
-                logger.warn("can not load netty epoll, switch nio model.");
-            }
-        }
+//        if (CC.mp.core.useNettyEpoll()) {
+//            try {
+//                Native.offsetofEpollData();
+//                return true;
+//            } catch (UnsatisfiedLinkError error) {
+//                logger.warn("can not load netty epoll, switch nio model.");
+//            }
+//        }
         return false;
     }
 
@@ -301,7 +311,12 @@ public abstract class NettyTCPServer extends BaseService implements Server{
     }
 
     public ChannelFactory<? extends ServerChannel> getChannelFactory() {
-        return NioServerSocketChannel::new;
+        return new ChannelFactory<ServerChannel>() {
+            @Override
+            public ServerChannel newChannel() {
+                return new NioServerSocketChannel();
+            }
+        };
     }
 
     public SelectorProvider getSelectorProvider() {

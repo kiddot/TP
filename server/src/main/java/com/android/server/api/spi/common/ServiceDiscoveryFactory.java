@@ -27,8 +27,8 @@ import com.android.server.api.spi.SpiLoader;
  *
  * @author ohun@live.cn (夜色)
  */
-public interface ServiceDiscoveryFactory extends Factory<ServiceDiscovery> {
-    static ServiceDiscovery create() {
-        return SpiLoader.load(ServiceDiscoveryFactory.class).get();
-    }
-}
+//public interface ServiceDiscoveryFactory extends Factory<ServiceDiscovery> {
+////    static ServiceDiscovery create() {
+////        return SpiLoader.load(ServiceDiscoveryFactory.class).get();
+////    }
+//}

@@ -30,8 +30,8 @@ public class ConfigManager {
 
     public int getHeartbeat(int min, int max) {
         return Math.max(
-                CC.mp.core.min_heartbeat,
-                Math.min(max, CC.mp.core.max_heartbeat)
+                CC.getInstance().getMin_heartbeat(),
+                Math.min(max, CC.getInstance().getMax_heartbeat())
         );
     }
 
@@ -49,16 +49,16 @@ public class ConfigManager {
      *
      * @return 外网IP地址
      */
-    public String getPublicIp() {
-
-        String localIp = Utils.getLocalIp();
-
-        String remoteIp = CC.mp.net.public_ip_mapping.getString(localIp);
-
-        if (remoteIp == null) {
-            remoteIp = Utils.getExtranetIp();
-        }
-
-        return remoteIp == null ? localIp : remoteIp;
-    }
+//    public String getPublicIp() {
+//
+//        String localIp = Utils.getLocalIp();
+//
+//        String remoteIp = CC.getInstance().mp.net.public_ip_mapping.getString(localIp);
+//
+//        if (remoteIp == null) {
+//            remoteIp = Utils.getExtranetIp();
+//        }
+//
+//        return remoteIp == null ? localIp : remoteIp;
+//    }
 }

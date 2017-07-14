@@ -25,7 +25,7 @@ import com.android.server.api.spi.SpiLoader;
 
 public interface MQClientFactory extends Factory<MQClient> {
 
-    static MQClient create() {
-        return SpiLoader.load(MQClientFactory.class).get();
-    }
+//    static MQClient create() {
+//        return SpiLoader.load(MQClientFactory.class).get();
+//    }
 }

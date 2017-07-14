@@ -17,7 +17,7 @@ import java.util.List;
 import static com.android.server.api.protocol.Packet.decodePacket;
 
 public final class PacketDecoder extends ByteToMessageDecoder {
-    private static final int maxPacketSize = CC.mp.core.max_packet_size;
+    private static final int maxPacketSize = CC.getInstance().getMax_packet_size();
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
