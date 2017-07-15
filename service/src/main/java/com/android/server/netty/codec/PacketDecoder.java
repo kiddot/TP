@@ -18,10 +18,8 @@ import static com.android.server.netty.codec.protocol.Packet.decodePacket;
 
 
 /**
- * Created by ohun on 2015/12/19.
  * length(4)+cmd(1)+cc(2)+flags(1)+sessionId(4)+lrc(1)+body(n)
  *
- * @author ohun@live.cn
  */
 public final class PacketDecoder extends ByteToMessageDecoder {
     private static final int maxPacketSize = ConfigCenter.max_packet_size;

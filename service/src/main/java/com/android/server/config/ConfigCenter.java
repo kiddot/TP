@@ -28,4 +28,5 @@ public class ConfigCenter {
     public static int gateway_server_work;
     public static int gateway_client_work;
     public static long profile_slowly_duration;
+    public static boolean useNettyPoll ;
 }
