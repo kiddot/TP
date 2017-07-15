@@ -2,7 +2,6 @@ package com.android.server.core.task;
 
 import com.android.server.common.BaseService;
 import com.android.server.common.ServerListener;
-import com.sun.corba.se.spi.orbutil.threadpool.ThreadPoolManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

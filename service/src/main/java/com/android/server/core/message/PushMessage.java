@@ -54,11 +54,12 @@ public class PushMessage extends BaseMessage{
     }
 
     @Override
-    public Map<String, String> encodeJsonBody() {
+    public Map<String, Object> encodeJsonBody() {
         if (content != null) {
             try {
                 String cont = new String(content, "UTF-8");
-                return Collections.singletonMap("content", cont);
+                Object o = cont;
+                return Collections.singletonMap("content", o);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
