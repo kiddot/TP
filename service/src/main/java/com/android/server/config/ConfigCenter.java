@@ -28,5 +28,7 @@ public class ConfigCenter {
     public static int gateway_server_work;
     public static int gateway_client_work;
     public static long profile_slowly_duration;
+    public static int aes_key_length;
+    public static String private_key;
     public static boolean useNettyPoll ;
 }
