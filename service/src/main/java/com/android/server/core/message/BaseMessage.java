@@ -149,7 +149,7 @@ public abstract class BaseMessage implements Message {
 
     }
 
-    protected Map<String, Object> encodeJsonBody() {
+    protected Map<String, String> encodeJsonBody() {
         return null;
     }
 

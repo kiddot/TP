@@ -65,4 +65,12 @@ public abstract class BaseService implements Service{
         void apply(ServerListener l) throws Throwable;
     }
 
+    protected void doStart(ServerListener listener) throws Throwable {
+        listener.onSuccess();
+    }
+
+    protected void doStop(ServerListener listener) throws Throwable {
+        listener.onSuccess();
+    }
+
 }
