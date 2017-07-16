@@ -222,7 +222,7 @@ public class PushClient implements Client, AckCallBack {
         message.encodeBody();
         ackRequestMgr.add(message.getSessionId(), AckContext
                 .build(this)
-                .setTimeout(1000)
+                .setTimeout(5000)
                 .setRequest(message.getPacket())
                 .setRetryCount(3)
         );

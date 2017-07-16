@@ -51,6 +51,7 @@ public final class AsyncPacketWriter implements PacketWriter{
             PacketEncoder.encode(packet, buffer);
             buffer.flip();
             ByteBuffer out = buffer.nioBuffer();
+            logger.d("packet:" + packet);
             while (out.hasRemaining()) {
                 if (connection.isConnected()) {
                     try {

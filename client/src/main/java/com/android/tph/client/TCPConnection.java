@@ -164,14 +164,17 @@ public final class TCPConnection implements Connection {
 
     private boolean doConnect() {
         List<String> address = allotClient.getServerAddress();
+        logger.w("你好丫" + address, address);
         if (address != null && address.size() > 0) {
             for (int i = 0; i < address.size(); i++) {
                 String[] host_port = address.get(i).split(":");
+                logger.d("准备开始"+host_port.length);
                 if (host_port.length == 2) {
 
-                    String host = host_port[0];
+                    String host = host_port[0] ;//+ ":" + host_port[1]
                     int port = Strings.toInt(host_port[1], 0);
 
+                    logger.d("port" + port +","+ host);
                     if (doConnect(host, port)) {
                         return true;
                     }

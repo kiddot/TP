@@ -23,8 +23,17 @@ public class AllotClient {
     private List<String> serverAddress = new ArrayList<>();
 
     public List<String> getServerAddress() {
+        if (serverAddress.size() > 0) return serverAddress;
+
         if (serverAddress.isEmpty()) {
-            serverAddress = queryServerAddressList();
+            ClientConfig config = ClientConfig.I;
+
+            if (config.getServerHost() != null && config.getServerPort() != 0) {
+                serverAddress.add(config.getServerHost() + ":" + config.getServerPort());
+            }
+            return serverAddress;
+
+            //serverAddress = queryServerAddressList();
         }
         return serverAddress;
     }
@@ -32,6 +41,7 @@ public class AllotClient {
     public List<String> queryServerAddressList() {
         ClientConfig config = ClientConfig.I;
         Logger logger = config.getLogger();
+
 
         if (config.getAllotServer() == null) {
             if (config.getServerHost() != null) {

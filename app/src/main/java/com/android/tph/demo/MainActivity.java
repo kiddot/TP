@@ -51,9 +51,17 @@ public class MainActivity extends AppCompatActivity {
         //公钥有服务端提供和私钥对应
         String publicKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCghPCWCobG8nTD24juwSVataW7iViRxcTkey/B792VZEhuHjQvA3cAJgx2Lv8GnX8NIoShZtoCg3Cx6ecs+VEPD2fBcg2L4JK7xldGpOJ3ONEAyVsLOttXZtNXvyDZRijiErQALMTorcgi79M5uVX9/jMv2Ggb2XAeZhlLD28fHwIDAQAB";
 
+        String[] address = allocServer.split(":");
+        String serverHost = address[1].substring(2, address[1].length());
+        int serverPort = Integer.parseInt(address[2]);
+        Toast.makeText(this, serverHost + serverPort, Toast.LENGTH_LONG).show();
+
+
         ClientConfig cc = ClientConfig.build()
                 .setPublicKey(publicKey)
                 .setAllotServer(allocServer)
+                .setServerHost(serverHost)
+                .setServerPort(serverPort)
                 .setDeviceId(getDeviceId())
                 .setClientVersion(BuildConfig.VERSION_NAME)
                 .setLogger(new TPLog(this, (EditText) findViewById(R.id.log)))
@@ -101,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         initPush(allocServer, userId);
 
         Push.I.checkInit(this.getApplication()).startPush();
-        Toast.makeText(this, "start push", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "start push" + allocServer, Toast.LENGTH_SHORT).show();
     }
 
     public void sendPush(View btn) throws Exception {

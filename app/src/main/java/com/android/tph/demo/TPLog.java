@@ -1,6 +1,7 @@
 package com.android.tph.demo;
 
 import android.app.Activity;
+import android.util.Log;
 import android.widget.EditText;
 
 import com.android.tph.api.Constants;
@@ -9,6 +10,7 @@ import com.android.tph.push.PushLog;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.Arrays;
 
 /**
  * Created by kiddo on 17-7-11.
@@ -34,6 +36,7 @@ public class TPLog implements Logger {
     @Override
     public void d(String s, Object... objects) {
         mPushLog.d(s, objects);
+        //Log.d("push", s + Arrays.toString(objects));
         append(null, s, objects);
     }
 
