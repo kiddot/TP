@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -32,6 +33,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -165,6 +167,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        Log.d(TAG, "sendPush: " + request.toString());
         Push.I.sendHttpProxy(request);
     }
 
@@ -186,5 +189,11 @@ public class MainActivity extends AppCompatActivity {
     public void unbindUser(View btn) {
         Push.I.unbindAccount();
         Toast.makeText(this, "unbind user", Toast.LENGTH_SHORT).show();
+    }
+
+    public void send(View view){
+        String test = "测试推送";
+        byte[] content = test.getBytes(Constants.UTF_8);
+        Push.I.sendPush(content);
     }
 }

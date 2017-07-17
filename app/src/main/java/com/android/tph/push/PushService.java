@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.android.tph.BuildConfig;
 import com.android.tph.api.Client;
@@ -18,6 +19,7 @@ import com.android.tph.api.ClientListener;
  */
 
 public class PushService extends Service implements ClientListener{
+    private static final String TAG = "PushService";
     public static final String ACTION_MESSAGE_RECEIVED = "com.mpush.MESSAGE_RECEIVED";
     public static final String ACTION_NOTIFICATION_OPENED = "com.mpush.NOTIFICATION_OPENED";
     public static final String ACTION_KICK_USER = "com.mpush.KICK_USER";
@@ -155,6 +157,7 @@ public class PushService extends Service implements ClientListener{
 
     @Override
     public void onHandshakeOk(Client client, int heartbeat) {
+        Log.d(TAG, "onHandshakeOk: " + "开始准备发送心跳!!");
         PushReceiver.startAlarm(this, heartbeat - 1000);
         sendBroadcast(new Intent(ACTION_HANDSHAKE_OK)
                 .addCategory(BuildConfig.APPLICATION_ID)

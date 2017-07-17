@@ -110,6 +110,7 @@ public final class HttpRequestMgr {
             if (this.future.cancel(true)) {
                 this.set(response);
                 if (callback != null) {
+                    logger.d("callback.onResponse"+ response);
                     callback.onResponse(response);
                 }
                 callback = null;

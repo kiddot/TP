@@ -4,6 +4,7 @@ import com.android.tph.api.Client;
 import com.android.tph.api.Logger;
 import com.android.tph.api.ack.AckCallBack;
 import com.android.tph.api.ack.AckContext;
+import com.android.tph.api.ack.AckModel;
 import com.android.tph.api.connection.SessionContext;
 import com.android.tph.api.connection.SessionStorage;
 import com.android.tph.api.http.HttpRequest;
@@ -209,7 +210,7 @@ public class PushClient implements Client, AckCallBack {
     @Override
     public void handshake() {
         SessionContext context = connection.getSessionContext();
-        context.changeCipher(CipherBox.INSTANCE.getRsaCipher());
+        //context.changeCipher(CipherBox.INSTANCE.getRsaCipher());//TODO: 暂时不加密
         HandshakeMessage message = new HandshakeMessage(connection);
         message.clientKey = CipherBox.INSTANCE.randomAESKey();
         message.iv = CipherBox.INSTANCE.randomAESIV();
@@ -292,7 +293,10 @@ public class PushClient implements Client, AckCallBack {
     public Future<Boolean> push(PushContext context) {
         if (connection.getSessionContext().handshakeOk()) {
             PushMessage message = new PushMessage(context.content, connection);
-            message.addFlag(context.ackModel.flag);
+            if (context.ackModel != null ) {
+                message.addFlag(context.ackModel.flag);
+            }
+            message.addFlag(Packet.FLAG_AUTO_ACK);
             message.send();
             logger.d("<<< send push message=%s", message);
             return ackRequestMgr.add(message.getSessionId(), context);

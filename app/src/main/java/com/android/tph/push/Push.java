@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.android.tph.api.Client;
 import com.android.tph.api.ClientListener;
@@ -22,6 +23,7 @@ import java.util.concurrent.Future;
  */
 
 public class Push {
+    private static final String TAG = "Push";
     private static final String SP_FILE_NAME = "mpush.cfg";
     private static final String SP_KEY_CV = "clientVersion";
     private static final String SP_KEY_DI = "deviceId";
@@ -241,6 +243,7 @@ public class Push {
      */
     public Future<Boolean> sendPush(byte[] content) {
         if (hasStarted() && client.isRunning()) {
+            Log.d(TAG, "sendPush: 发送Push到服务端, 不需要ACK"  + (hasStarted() && client.isRunning()));
             return client.push(PushContext.build(content));
         }
         return null;
@@ -254,6 +257,7 @@ public class Push {
      */
     public Future<HttpResponse> sendHttpProxy(HttpRequest request) {
         if (hasStarted() && client.isRunning()) {
+            Log.d(TAG, "sendHttpProxy: ");
             return client.sendHttp(request);
         }
         return null;

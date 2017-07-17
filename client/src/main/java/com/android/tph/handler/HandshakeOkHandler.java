@@ -47,23 +47,28 @@ public final class HandshakeOkHandler extends BaseMessageHandler<HandshakeOkMess
         Connection connection = message.getConnection();
         SessionContext context = connection.getSessionContext();
         byte[] serverKey = message.serverKey;
-        if (serverKey.length != CipherBox.INSTANCE.getAesKeyLength()) {
-            logger.w("handshake error serverKey invalid message=%s", message);
-            connection.reconnect();
-            return;
+        context.setHeartbeat(10000);
+        if (serverKey != null){
+            if (serverKey.length != CipherBox.INSTANCE.getAesKeyLength()) {
+                logger.w("handshake error serverKey invalid message=%s", message);
+                connection.reconnect();
+                return;
+            }
+            //设置心跳
+            context.setHeartbeat(message.heartbeat);
+
+            //更换密钥
+            AesCipher cipher = (AesCipher) context.cipher;
+            byte[] sessionKey = CipherBox.INSTANCE.mixKey(cipher.key, serverKey);
+            context.changeCipher(new AesCipher(sessionKey, cipher.iv));
+            //触发握手成功事件
+
         }
-        //设置心跳
-        context.setHeartbeat(message.heartbeat);
-
-        //更换密钥
-        AesCipher cipher = (AesCipher) context.cipher;
-        byte[] sessionKey = CipherBox.INSTANCE.mixKey(cipher.key, serverKey);
-        context.changeCipher(new AesCipher(sessionKey, cipher.iv));
-
-        //触发握手成功事件
-
+        logger.d("messageheart:" + message.heartbeat);
+        if (message.heartbeat == 0) message.heartbeat = 10000 ;
         ClientListener listener = ClientConfig.I.getClientListener();
         listener.onHandshakeOk(connection.getClient(), message.heartbeat);
+
 
         //保存token
         saveToken(message, context);

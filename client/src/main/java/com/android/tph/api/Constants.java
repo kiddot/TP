@@ -24,7 +24,7 @@ public interface Constants {
     int MAX_RESTART_COUNT = 10;//客户端重连次数超过该值，重连线程休眠10min后再重试
     int MAX_TOTAL_RESTART_COUNT = 1000;//客户端重连次数超过该值，将不再尝试重连
 
-    int MAX_HB_TIMEOUT_COUNT = 2;
+    int MAX_HB_TIMEOUT_COUNT = 3;
 
     String HTTP_HEAD_READ_TIMEOUT = "readTimeout";
 }
