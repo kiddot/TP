@@ -51,7 +51,9 @@ public class DefaultClientListener implements ClientListener {
 
     @Override
     public void onReceivePush(Client client, byte[] content, int messageId) {
-
+        if (listener != null) {//dispatcher已经使用了Executor，此处直接同步调用
+            listener.onReceivePush(client, content, messageId);
+        }
     }
 
     @Override

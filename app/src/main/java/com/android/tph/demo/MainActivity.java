@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import com.android.tph.BuildConfig;
 import com.android.tph.R;
+import com.android.tph.api.Client;
+import com.android.tph.api.ClientListener;
 import com.android.tph.api.Constants;
 import com.android.tph.api.http.HttpCallBack;
 import com.android.tph.api.http.HttpMethod;
@@ -26,13 +28,14 @@ import com.android.tph.push.Push;
 
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.concurrent.TimeUnit;
 
 /**
  * Created by kiddo on 17-7-11.
  */
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ClientListener{
     private static final String TAG = "MainActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
                 .setEnableHttpProxy(true)
                 .setUserId(userId);
         Push.I.checkInit(getApplicationContext()).setClientConfig(cc);
+        ClientConfig.I.setClientListener(this);
     }
 
     private String getDeviceId() {
@@ -195,5 +199,45 @@ public class MainActivity extends AppCompatActivity {
         String test = "测试推送";
         byte[] content = test.getBytes(Constants.UTF_8);
         Push.I.sendPush(content);
+    }
+
+    @Override
+    public void onConnected(Client client) {
+
+    }
+
+    @Override
+    public void onDisConnected(Client client) {
+
+    }
+
+    @Override
+    public void onHandshakeOk(Client client, int heartbeat) {
+
+    }
+
+    @Override
+    public void onReceivePush(Client client, byte[] content, int messageId) {
+        try {
+            String msg = new String(content, "UTF-8");
+            Toast.makeText(this, msg , Toast.LENGTH_LONG).show();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onKickUser(String deviceId, String userId) {
+
+    }
+
+    @Override
+    public void onBind(boolean success, String userId) {
+
+    }
+
+    @Override
+    public void onUnbind(boolean success, String userId) {
+
     }
 }
