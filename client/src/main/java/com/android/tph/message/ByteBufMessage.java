@@ -22,13 +22,17 @@ package com.android.tph.message;
 
 
 import com.android.tph.api.Constants;
+import com.android.tph.api.Logger;
 import com.android.tph.api.connection.Connection;
 import com.android.tph.api.protocol.Packet;
+import com.android.tph.client.ClientConfig;
 import com.android.tph.util.ByteBuf;
 
 import java.nio.ByteBuffer;
 
 public abstract class ByteBufMessage extends BaseMessage {
+    private final Logger logger = ClientConfig.I.getLogger();
+
 
     public ByteBufMessage(Packet message, Connection connection) {
         super(message, connection);
@@ -67,6 +71,7 @@ public abstract class ByteBufMessage extends BaseMessage {
     }
 
     protected void encodeBytes(ByteBuf body, byte[] field) {
+        logger.w("field.length" + field.length);
         if (field == null || field.length == 0) {
             body.putShort(0);
         } else if (field.length < Short.MAX_VALUE) {

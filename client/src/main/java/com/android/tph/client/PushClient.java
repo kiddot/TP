@@ -229,7 +229,7 @@ public class PushClient implements Client, AckCallBack {
         );
         logger.w("<<< do handshake, message=%s", message);
         message.send();
-        context.changeCipher(new AesCipher(message.clientKey, message.iv));
+        //context.changeCipher(new AesCipher(message.clientKey, message.iv));
     }
 
     @Override
@@ -251,17 +251,18 @@ public class PushClient implements Client, AckCallBack {
         BindUserMessage message = BindUserMessage
                 .buildBind(connection)
                 .setUserId(userId)
+                .setAlias("liangdekai")
                 .setTags(tags);
         message.encodeBody();
-        ackRequestMgr.add(message.getSessionId(), AckContext
-                .build(this)
-                .setTimeout(3000)
-                .setRequest(message.getPacket())
-                .setRetryCount(5)
-        );
+//        ackRequestMgr.add(message.getSessionId(), AckContext
+//                .build(this)
+//                .setTimeout(3000)
+//                .setRequest(message.getPacket())
+//                .setRetryCount(5)
+//        );
         logger.w("<<< do bind user, userId=%s", userId);
         message.send();
-
+        logger.w("bindMessage : " + message);
     }
 
     @Override

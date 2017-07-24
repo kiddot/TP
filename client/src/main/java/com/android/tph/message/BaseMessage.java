@@ -21,6 +21,7 @@ package com.android.tph.message;
 
 
 
+import com.android.tph.api.Logger;
 import com.android.tph.api.Message;
 import com.android.tph.api.connection.Connection;
 import com.android.tph.api.connection.SessionContext;
@@ -34,6 +35,7 @@ public abstract class BaseMessage implements Message {
     public static final byte STATUS_DECODED = 1;
     public static final byte STATUS_ENCODED = 2;
     private static final AtomicInteger SID_SEQ = new AtomicInteger();
+    private final Logger logger = ClientConfig.I.getLogger();
     protected final Packet packet;
     protected final Connection connection;
     protected byte status = 0;
@@ -77,9 +79,11 @@ public abstract class BaseMessage implements Message {
         else status |= STATUS_ENCODED;
 
         byte[] tmp = encode();
+        logger.w("tmp before" + tmp.length);
         if (tmp != null && tmp.length > 0) {
             //1.压缩
             if (tmp.length > ClientConfig.I.getCompressLimit()) {
+                logger.w("开始压缩");
                 byte[] result = IOUtils.compress(tmp);
                 if (result.length > 0) {
                     tmp = result;
@@ -90,12 +94,15 @@ public abstract class BaseMessage implements Message {
             //2.加密
             SessionContext context = connection.getSessionContext();
             if (context.cipher != null) {
+                logger.w("开始加密");
                 byte[] result = context.cipher.encrypt(tmp);
                 if (result.length > 0) {
                     tmp = result;
                     packet.addFlag(Packet.FLAG_CRYPTO);
                 }
             }
+
+            logger.w("tmp after" + tmp.length);
             packet.body = tmp;
         }
     }
