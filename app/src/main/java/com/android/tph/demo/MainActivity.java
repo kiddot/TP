@@ -37,10 +37,13 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity implements ClientListener{
     private static final String TAG = "MainActivity";
+    private EditText mEtContent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mEtContent = (EditText) findViewById(R.id.main_content);
         Notifications.I.init(this.getApplicationContext());
         Notifications.I.setSmallIcon(R.mipmap.ic_launcher);
         Notifications.I.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
@@ -196,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements ClientListener{
     }
 
     public void send(View view){
-        String test = "测试推送";
+        String test = mEtContent.getText().toString();
         byte[] content = test.getBytes(Constants.UTF_8);
         Push.I.sendPush(content);
     }

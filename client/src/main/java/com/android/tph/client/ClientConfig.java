@@ -14,6 +14,7 @@ import com.android.tph.util.DefaultLogger;
 
 public final class ClientConfig {
     private final DefaultClientListener clientListener = new DefaultClientListener();
+    private ClientListener internalListener;
     public static ClientConfig I = new ClientConfig();
     private String allotServer;
     private String serverHost;
@@ -178,6 +179,15 @@ public final class ClientConfig {
 
     public ClientConfig setClientListener(ClientListener clientListener) {
         this.clientListener.setListener(clientListener);
+        return this;
+    }
+
+    public ClientListener getInternalListener(){
+        return internalListener;
+    }
+
+    public ClientConfig setInternalListener(ClientListener listener){
+        this.internalListener = listener ;
         return this;
     }
 

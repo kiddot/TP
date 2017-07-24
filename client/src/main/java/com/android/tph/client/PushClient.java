@@ -254,12 +254,12 @@ public class PushClient implements Client, AckCallBack {
                 .setAlias("liangdekai")
                 .setTags(tags);
         message.encodeBody();
-//        ackRequestMgr.add(message.getSessionId(), AckContext
-//                .build(this)
-//                .setTimeout(3000)
-//                .setRequest(message.getPacket())
-//                .setRetryCount(5)
-//        );
+        ackRequestMgr.add(message.getSessionId(), AckContext
+                .build(this)
+                .setTimeout(3000)
+                .setRequest(message.getPacket())
+                .setRetryCount(3)
+        );
         logger.w("<<< do bind user, userId=%s", userId);
         message.send();
         logger.w("bindMessage : " + message);

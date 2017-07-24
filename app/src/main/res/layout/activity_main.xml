@@ -140,6 +140,7 @@
     </LinearLayout>
 
     <EditText
+        android:id="@+id/main_content"
         android:layout_width="190dp"
         android:layout_height="40dp" />
 

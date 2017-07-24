@@ -64,11 +64,10 @@ public final class HandshakeOkHandler extends BaseMessageHandler<HandshakeOkMess
             //触发握手成功事件
 
         }
-        logger.d("messageheart:" + message.heartbeat);
         if (message.heartbeat == 0) message.heartbeat = 10000 ;
-        ClientListener listener = ClientConfig.I.getClientListener();
+        logger.d("messageheart:" + message.heartbeat);
+        ClientListener listener = ClientConfig.I.getInternalListener();
         listener.onHandshakeOk(connection.getClient(), message.heartbeat);
-
 
         //保存token
         saveToken(message, context);

@@ -12,6 +12,10 @@ import android.util.Log;
 import com.android.tph.BuildConfig;
 import com.android.tph.api.Client;
 import com.android.tph.api.ClientListener;
+import com.android.tph.api.Logger;
+import com.android.tph.client.ClientConfig;
+
+import static com.android.tph.push.PushReceiver.ACTION_HEALTH_CHECK;
 
 
 /**
@@ -20,6 +24,7 @@ import com.android.tph.api.ClientListener;
 
 public class PushService extends Service implements ClientListener{
     private static final String TAG = "PushService";
+    private final Logger logger = ClientConfig.I.getLogger();
     public static final String ACTION_MESSAGE_RECEIVED = "com.mpush.MESSAGE_RECEIVED";
     public static final String ACTION_NOTIFICATION_OPENED = "com.mpush.NOTIFICATION_OPENED";
     public static final String ACTION_KICK_USER = "com.mpush.KICK_USER";
@@ -50,6 +55,8 @@ public class PushService extends Service implements ClientListener{
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        logger.d("PushService: 启动");
+        ClientConfig.I.setInternalListener(this);
         if (!Push.I.hasStarted()) {
             Push.I.checkInit(this).create(this);
         }
@@ -157,9 +164,14 @@ public class PushService extends Service implements ClientListener{
 
     @Override
     public void onHandshakeOk(Client client, int heartbeat) {
-        Log.d(TAG, "onHandshakeOk: " + "开始准备发送心跳!!");
+        logger.w("onHandshakeOk: " + "开始准备发送心跳!!");
         PushReceiver.startAlarm(this, heartbeat - 1000);
         sendBroadcast(new Intent(ACTION_HANDSHAKE_OK)
+                .addCategory(BuildConfig.APPLICATION_ID)
+                .putExtra(EXTRA_HEARTBEAT, heartbeat)
+        );
+
+        sendBroadcast(new Intent(ACTION_HEALTH_CHECK)
                 .addCategory(BuildConfig.APPLICATION_ID)
                 .putExtra(EXTRA_HEARTBEAT, heartbeat)
         );
