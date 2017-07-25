@@ -30,5 +30,7 @@ public interface PushProtocol {
 
     Future<Boolean> push(PushContext context);
 
+    Future<Boolean> push(PushContext context, String userId);
+
     Future<HttpResponse> sendHttp(HttpRequest request);
 }

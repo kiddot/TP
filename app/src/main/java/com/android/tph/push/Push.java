@@ -249,6 +249,30 @@ public class Push {
         return null;
     }
 
+    public Future<Boolean> sendPush(byte[] content, String userId) {
+        if (hasStarted() && client.isRunning()) {
+            Log.d(TAG, "sendPush: 发送Push到服务端, 不需要ACK"  + (hasStarted() && client.isRunning()));
+            return client.push(PushContext.build(content), userId);
+        }
+        return null;
+    }
+
+
+    /**
+     * 发送Push到服务端, 不需要ACK
+     *
+     * @param content 要推送的数据
+     * @return
+     */
+    public Future<Boolean> sendPushByUserId(byte[] content, String userId) {
+        if (hasStarted() && client.isRunning()) {
+            Log.d(TAG, "sendPush: 发送Push到服务端, 不需要ACK"  + (hasStarted() && client.isRunning()));
+            return client.push(PushContext.build(content), userId);
+        }
+        return null;
+    }
+
+
     /**
      * 发送Http代理请求
      *

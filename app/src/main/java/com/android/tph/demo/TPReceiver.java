@@ -85,7 +85,12 @@ public class TPReceiver extends BroadcastReceiver {
                 return ndo;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            NotificationDo ndo = new NotificationDo();
+            ndo.setContent(message);
+            ndo.setTitle(message);
+            ndo.setTicker(message);
+            ndo.setNid(1);
+            return ndo;
         }
         return null;
     }

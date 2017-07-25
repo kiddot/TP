@@ -38,12 +38,14 @@ import java.util.concurrent.TimeUnit;
 public class MainActivity extends AppCompatActivity implements ClientListener{
     private static final String TAG = "MainActivity";
     private EditText mEtContent;
+    private EditText mEtUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mEtContent = (EditText) findViewById(R.id.main_content);
+        mEtUserId = (EditText) findViewById(R.id.to);
         Notifications.I.init(this.getApplicationContext());
         Notifications.I.setSmallIcon(R.mipmap.ic_launcher);
         Notifications.I.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
@@ -200,8 +202,9 @@ public class MainActivity extends AppCompatActivity implements ClientListener{
 
     public void send(View view){
         String test = mEtContent.getText().toString();
+        String userId = mEtUserId.getText().toString();
         byte[] content = test.getBytes(Constants.UTF_8);
-        Push.I.sendPush(content);
+        Push.I.sendPush(content, userId);
     }
 
     @Override

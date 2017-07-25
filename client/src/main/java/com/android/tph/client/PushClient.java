@@ -306,6 +306,22 @@ public class PushClient implements Client, AckCallBack {
     }
 
     @Override
+    public Future<Boolean> push(PushContext context, String userId) {
+        if (connection.getSessionContext().handshakeOk()) {
+            PushMessage message = new PushMessage(context.content, connection);
+            if (context.ackModel != null ) {
+                message.addFlag(context.ackModel.flag);
+            }
+            message.setUserId(userId);
+            message.addFlag(Packet.FLAG_AUTO_ACK);
+            message.send();
+            logger.d("<<< send push message=%s", message);
+            return ackRequestMgr.add(message.getSessionId(), context);
+        }
+        return null;
+    }
+
+    @Override
     public Future<HttpResponse> sendHttp(HttpRequest request) {
         if (connection.getSessionContext().handshakeOk()) {
             HttpRequestMessage message = new HttpRequestMessage(connection);

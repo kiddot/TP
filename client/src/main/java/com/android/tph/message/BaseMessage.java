@@ -79,7 +79,6 @@ public abstract class BaseMessage implements Message {
         else status |= STATUS_ENCODED;
 
         byte[] tmp = encode();
-        logger.w("tmp before" + tmp.length);
         if (tmp != null && tmp.length > 0) {
             //1.压缩
             if (tmp.length > ClientConfig.I.getCompressLimit()) {
@@ -102,7 +101,6 @@ public abstract class BaseMessage implements Message {
                 }
             }
 
-            logger.w("tmp after" + tmp.length);
             packet.body = tmp;
         }
     }
