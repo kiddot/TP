@@ -309,6 +309,7 @@ public class PushClient implements Client, AckCallBack {
     public Future<Boolean> push(PushContext context, String userId) {
         if (connection.getSessionContext().handshakeOk()) {
             PushMessage message = new PushMessage(context.content, connection);
+            message.addFlag(AckModel.AUTO_ACK.flag);
             if (context.ackModel != null ) {
                 message.addFlag(context.ackModel.flag);
             }
@@ -316,7 +317,12 @@ public class PushClient implements Client, AckCallBack {
             message.addFlag(Packet.FLAG_AUTO_ACK);
             message.send();
             logger.d("<<< send push message=%s", message);
-            return ackRequestMgr.add(message.getSessionId(), context);
+            return ackRequestMgr.add(message.getSessionId(), AckContext
+                    .build(this)
+                    .setTimeout(3000)
+                    .setRequest(message.getPacket())
+                    .setRetryCount(3)
+            );
         }
         return null;
     }

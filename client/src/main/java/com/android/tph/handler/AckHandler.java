@@ -43,9 +43,9 @@ public class AckHandler extends BaseMessageHandler<AckMessage> {
 
     @Override
     public void handle(AckMessage message) {
-        /*AckRequestMgr.RequestTask task = ackRequestMgr.getAndRemove(message.getSessionId());
+        AckRequestMgr.RequestTask task = ackRequestMgr.getAndRemove(message.getSessionId());
         if (task != null) {
             task.success(message.getPacket());
-        }*/
+        }
     }
 }
