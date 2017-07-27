@@ -145,27 +145,32 @@ public class PushClient implements Client, AckCallBack {
 
     @Override
     public boolean healthCheck() {
+        HeartbeatStrategy heartbeatStrategy = HeartbeatStrategy.getInstance();
+        heartbeatStrategy.calculateFixHeartbeat(connection);
+        heartbeatStrategy.calculateRunningStrategy(connection);
 
-        if (connection.isReadTimeout()) {
-            hbTimeoutTimes++;
-            logger.w("heartbeat timeout times=%s", hbTimeoutTimes);
-        } else {
-            hbTimeoutTimes = 0;
-        }
+        return true;//meaningless
 
-        if (hbTimeoutTimes >= MAX_HB_TIMEOUT_COUNT) {
-            logger.w("heartbeat timeout times=%d over limit=%d, client restart", hbTimeoutTimes, MAX_HB_TIMEOUT_COUNT);
-            hbTimeoutTimes = 0;
-            connection.reconnect();
-            return false;
-        }
-
-        if (connection.isWriteTimeout()) {
-            logger.d("<<< send heartbeat ping...");
-            connection.send(Packet.HB_PACKET);
-        }
-
-        return true;
+//        if (connection.isReadTimeout()) {
+//            hbTimeoutTimes++;
+//            logger.w("heartbeat timeout times=%s", hbTimeoutTimes);
+//        } else {
+//            hbTimeoutTimes = 0;
+//        }
+//
+//        if (hbTimeoutTimes >= MAX_HB_TIMEOUT_COUNT) {
+//            logger.w("heartbeat timeout times=%d over limit=%d, client restart", hbTimeoutTimes, MAX_HB_TIMEOUT_COUNT);
+//            hbTimeoutTimes = 0;
+//            connection.reconnect();
+//            return false;
+//        }
+//
+//        if (connection.isWriteTimeout()) {
+//            logger.d("<<< send heartbeat ping...");
+//            connection.send(Packet.HB_PACKET);
+//        }
+//
+//        return true;
     }
 
     @Override

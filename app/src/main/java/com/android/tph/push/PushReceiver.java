@@ -6,6 +6,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 
 import com.android.tph.api.Constants;
+import com.android.tph.api.Logger;
+import com.android.tph.client.ClientConfig;
+import com.android.tph.client.HeartbeatStrategy;
 
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -20,6 +23,8 @@ import static android.net.ConnectivityManager.CONNECTIVITY_ACTION;
  */
 
 public class PushReceiver extends BroadcastReceiver {
+    private static final String TAG = "PushReceiver";
+    private final static Logger logger = ClientConfig.I.getLogger();
     public static final String ACTION_HEALTH_CHECK = "com.mpush.HEALTH_CHECK";
     public static final String ACTION_NOTIFY_CANCEL = "com.mpush.NOTIFY_CANCEL";
     public static int delay = Constants.DEF_HEARTBEAT;
@@ -31,8 +36,14 @@ public class PushReceiver extends BroadcastReceiver {
         if (ACTION_HEALTH_CHECK.equals(action)) {//处理心跳
             if (Push.I.hasStarted()) {
                 if (Push.I.client.isRunning()) {
-                    if (Push.I.client.healthCheck()) {
-                        startAlarm(context, delay);
+//                    if (Push.I.client.healthCheck()) {
+//                        startAlarm(context, delay);
+//                    }
+                    Push.I.client.healthCheck();
+                    if (HeartbeatStrategy.getInstance().ismIsNeedRunningStrategy()){
+                        startAlarm(context, HeartbeatStrategy.getInstance().getmSuccessHeartbeat());
+                    } else {
+                        startAlarm(context, HeartbeatStrategy.getInstance().getmCurrentHeartbeat());
                     }
                 }
             }
@@ -63,6 +74,7 @@ public class PushReceiver extends BroadcastReceiver {
     }
 
     static void startAlarm(Context context, int delay) {
+        logger.w("delay:"+delay);
         Intent it = new Intent(PushReceiver.ACTION_HEALTH_CHECK);
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, it, 0);
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);

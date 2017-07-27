@@ -14,6 +14,7 @@ import com.android.tph.api.Client;
 import com.android.tph.api.ClientListener;
 import com.android.tph.api.Logger;
 import com.android.tph.client.ClientConfig;
+import com.android.tph.client.HeartbeatStrategy;
 
 import static com.android.tph.push.PushReceiver.ACTION_HEALTH_CHECK;
 
@@ -164,14 +165,10 @@ public class PushService extends Service implements ClientListener{
 
     @Override
     public void onHandshakeOk(Client client, int heartbeat) {
-        logger.w("onHandshakeOk: " + "开始准备发送心跳!!");
-        PushReceiver.startAlarm(this, heartbeat - 1000);
+        int heart = HeartbeatStrategy.getInstance().getmCurrentHeartbeat();
+        logger.w("onHandshakeOk: " + "开始准备发送心跳!!" + heart);
+        PushReceiver.startAlarm(this, heart);
         sendBroadcast(new Intent(ACTION_HANDSHAKE_OK)
-                .addCategory(BuildConfig.APPLICATION_ID)
-                .putExtra(EXTRA_HEARTBEAT, heartbeat)
-        );
-
-        sendBroadcast(new Intent(ACTION_HEALTH_CHECK)
                 .addCategory(BuildConfig.APPLICATION_ID)
                 .putExtra(EXTRA_HEARTBEAT, heartbeat)
         );
