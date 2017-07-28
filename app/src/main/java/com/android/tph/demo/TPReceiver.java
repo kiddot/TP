@@ -14,6 +14,7 @@ import com.android.tph.push.PushService;
 import org.json.JSONObject;
 
 /**
+ * 用户对推送事件的自定义接受处理
  * Created by kiddo on 17-7-11.
  */
 
@@ -41,6 +42,7 @@ public class TPReceiver extends BroadcastReceiver {
                 if (TextUtils.isEmpty(ndo.getTitle())) ndo.setTitle("MPush");
                 if (TextUtils.isEmpty(ndo.getTicker())) ndo.setTicker(ndo.getTitle());
                 if (TextUtils.isEmpty(ndo.getContent())) ndo.setContent(ndo.getTitle());
+                ndo.setNid(messageId);//每条信息的id生成一个通知栏通知
                 Notifications.I.notify(ndo, it);
             }
         } else if (PushService.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
@@ -89,7 +91,6 @@ public class TPReceiver extends BroadcastReceiver {
             ndo.setContent(message);
             ndo.setTitle(message);
             ndo.setTicker(message);
-            ndo.setNid(1);
             return ndo;
         }
         return null;

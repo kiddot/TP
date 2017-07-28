@@ -71,7 +71,7 @@ public final class HandshakeOkHandler extends BaseMessageHandler<HandshakeOkMess
         listener.onHandshakeOk(connection.getClient(), message.heartbeat);
 
         //保存token
-        //saveToken(message, context);// TODO: open
+        //saveToken(message, context);
 
     }
 
