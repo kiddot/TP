@@ -39,7 +39,7 @@ public final class PushMessageHandler extends BaseMessageHandler<PushMessage> {
 
     @Override
     public void handle(PushMessage message) {
-        logger.d(">>> receive push message=%s", message.content.length);
+        logger.d(">>> receive push message=%s", message.getSessionId());
         listener.onReceivePush(message.getConnection().getClient(),
                 message.content,
                 message.bizAck() ? message.getSessionId() : 0);

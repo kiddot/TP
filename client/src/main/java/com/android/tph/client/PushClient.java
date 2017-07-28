@@ -181,11 +181,13 @@ public class PushClient implements Client, AckCallBack {
             return;
         }
 
+
         String ss = storage.getSession();
         if (Strings.isBlank(ss)) {
             handshake();
             return;
         }
+        logger.w("SessionStorage:" + ss);
 
         PersistentSession session = PersistentSession.decode(ss);
         if (session == null || session.isExpired()) {
@@ -215,9 +217,9 @@ public class PushClient implements Client, AckCallBack {
     @Override
     public void handshake() {
         SessionContext context = connection.getSessionContext();
-        //context.changeCipher(CipherBox.INSTANCE.getRsaCipher());//TODO: 暂时不加密
+        context.changeCipher(CipherBox.INSTANCE.getRsaCipher());
         HandshakeMessage message = new HandshakeMessage(connection);
-        message.clientKey = CipherBox.INSTANCE.randomAESKey();
+        message.clientKey = CipherBox.INSTANCE.randomAESKey();//在这里随机生产一个随机数，用于AES加密
         message.iv = CipherBox.INSTANCE.randomAESIV();
         message.deviceId = config.getDeviceId();
         message.osName = config.getOsName();
@@ -234,11 +236,11 @@ public class PushClient implements Client, AckCallBack {
         );
         logger.w("<<< do handshake, message=%s", message);
         message.send();
-        //context.changeCipher(new AesCipher(message.clientKey, message.iv));
+        context.changeCipher(new AesCipher(message.clientKey, message.iv));
     }
 
     @Override
-    public void bindUser(final String userId, final String tags) {
+    public void bindUser(final String userId, final String tags, String alias) {
         if (Strings.isBlank(userId)) {
             logger.w("bind user is null");
             return;
@@ -256,7 +258,7 @@ public class PushClient implements Client, AckCallBack {
         BindUserMessage message = BindUserMessage
                 .buildBind(connection)
                 .setUserId(userId)
-                .setAlias("liangdekai")
+                .setAlias(alias)
                 .setTags(tags);
         message.encodeBody();
         ackRequestMgr.add(message.getSessionId(), AckContext

@@ -46,7 +46,7 @@ public final class HandshakeOkHandler extends BaseMessageHandler<HandshakeOkMess
 
         Connection connection = message.getConnection();
         SessionContext context = connection.getSessionContext();
-        byte[] serverKey = message.serverKey;
+        byte[] serverKey = message.serverKey;//在这里获取服务端返回来的随机数
         context.setHeartbeat(10000);
         if (serverKey != null){
             if (serverKey.length != CipherBox.INSTANCE.getAesKeyLength()) {
@@ -61,6 +61,7 @@ public final class HandshakeOkHandler extends BaseMessageHandler<HandshakeOkMess
             AesCipher cipher = (AesCipher) context.cipher;
             byte[] sessionKey = CipherBox.INSTANCE.mixKey(cipher.key, serverKey);
             context.changeCipher(new AesCipher(sessionKey, cipher.iv));
+            logger.d("更换密钥 success");
             //触发握手成功事件
 
         }
@@ -70,7 +71,7 @@ public final class HandshakeOkHandler extends BaseMessageHandler<HandshakeOkMess
         listener.onHandshakeOk(connection.getClient(), message.heartbeat);
 
         //保存token
-        saveToken(message, context);
+        //saveToken(message, context);// TODO: open
 
     }
 

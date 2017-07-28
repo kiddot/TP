@@ -32,7 +32,7 @@ public final class ClientConfig {
     private int compressLimit = Constants.DEF_COMPRESS_LIMIT;
     private SessionStorage sessionStorage;
     private String sessionStorageDir;
-    private Logger logger;
+    private Logger logger ;
     private boolean logEnabled;
     private boolean enableHttpProxy = true;
 

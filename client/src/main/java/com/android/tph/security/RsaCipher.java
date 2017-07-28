@@ -23,6 +23,7 @@ package com.android.tph.security;
 
 
 import com.android.tph.api.connection.Cipher;
+import com.android.tph.client.ClientConfig;
 import com.android.tph.util.crypto.RSAUtils;
 
 import java.security.interfaces.RSAPublicKey;

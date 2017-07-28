@@ -182,12 +182,12 @@ public class Push {
      *
      * @param userId 要绑定的账号
      */
-    public void bindAccount(String userId, String tags) {
+    public void bindAccount(String userId, String tags, String alias) {
         if (hasInit()) {
             sp.edit().putString(SP_KEY_AT, userId).apply();
             sp.edit().putString(SP_KEY_TG, tags).apply();
             if (hasStarted() && client.isRunning()) {
-                client.bindUser(userId, tags);
+                client.bindUser(userId, tags, alias);
             } else if (clientConfig != null) {
                 clientConfig.setUserId(userId);
             }

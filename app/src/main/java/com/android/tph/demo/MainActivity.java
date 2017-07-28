@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements ClientListener{
     }
 
     private void initPush(String allocServer, String userId) {
-        //公钥有服务端提供和私钥对应
+        //公钥由服务端提供和私钥对应
         String publicKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCghPCWCobG8nTD24juwSVataW7iViRxcTkey/B792VZEhuHjQvA3cAJgx2Lv8GnX8NIoShZtoCg3Cx6ecs+VEPD2fBcg2L4JK7xldGpOJ3ONEAyVsLOttXZtNXvyDZRijiErQALMTorcgi79M5uVX9/jMv2Ggb2XAeZhlLD28fHwIDAQAB";
 
         String[] address = allocServer.split(":");
@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements ClientListener{
         EditText et = (EditText) findViewById(R.id.from);
         String userId = et.getText().toString().trim();
         if (!TextUtils.isEmpty(userId)) {
-            Push.I.bindAccount(userId, "mpush:" + (int) (Math.random() * 10));
+            Push.I.bindAccount(userId, "mpush:" + (int) (Math.random() * 10), "alias");
         }
     }
 

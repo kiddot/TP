@@ -21,6 +21,7 @@ package com.android.tph.session;
 
 
 import com.android.tph.api.Constants;
+import com.android.tph.api.Logger;
 import com.android.tph.api.connection.SessionStorage;
 import com.android.tph.client.ClientConfig;
 import com.android.tph.util.IOUtils;
@@ -33,6 +34,7 @@ import java.io.InputStream;
 public final class FileSessionStorage implements SessionStorage {
     private final String rootDir;
     private final String fileName = "token.dat";
+    private Logger logger = ClientConfig.I.getLogger();
 
     public FileSessionStorage(String rootDir) {
         this.rootDir = rootDir;

@@ -22,7 +22,7 @@ public interface PushProtocol {
 
     void handshake();
 
-    void bindUser(String userId, String tags);
+    void bindUser(String userId, String tags, String alias);
 
     void unbindUser();
 

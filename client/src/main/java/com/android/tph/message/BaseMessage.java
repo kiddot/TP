@@ -55,6 +55,7 @@ public abstract class BaseMessage implements Message {
             byte[] tmp = packet.body;
             if (packet.hasFlag(Packet.FLAG_CRYPTO)) {
                 if (connection.getSessionContext().cipher != null) {
+                    logger.w("开始解密"  + connection.getSessionContext().cipher.toString());
                     tmp = connection.getSessionContext().cipher.decrypt(tmp);
                 }
             }
@@ -93,9 +94,9 @@ public abstract class BaseMessage implements Message {
             //2.加密
             SessionContext context = connection.getSessionContext();
             if (context.cipher != null) {
-                logger.w("开始加密");
                 byte[] result = context.cipher.encrypt(tmp);
                 if (result.length > 0) {
+                    logger.w("开始加密" + result.length);
                     tmp = result;
                     packet.addFlag(Packet.FLAG_CRYPTO);
                 }
