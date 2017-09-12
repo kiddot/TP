@@ -6,6 +6,7 @@ import com.android.tph.util.thread.ExecutorManager;
 import java.util.concurrent.Callable;
 
 /**
+ * 用于tcp连接的线程
  * Created by kiddo on 17-7-11.
  */
 

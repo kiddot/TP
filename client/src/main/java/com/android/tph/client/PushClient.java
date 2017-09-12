@@ -173,6 +173,14 @@ public class PushClient implements Client, AckCallBack {
 //        return true;
     }
 
+    /**
+     * 这里能进行快速重连的基本根据在于握手完成之后是否有进行saveToken
+     *
+     * 补充：FastConnect是基于Handshake生成的sessionId来配合使用的，目的是为了减少RSA加密的使用次数，
+     * 特别是网络较差的情况，毕竟RSA加密想对还是比较耗时的，客户端只需把sessionId传给服务端，
+     * 其就能从redis或者内存中取出上次会话信息，恢复到上次握手成功之后的会话状态，
+     * 这个过程不需要任何加密和密钥交换，相对会比较快速。
+     */
     @Override
     public void fastConnect() {
         SessionStorage storage = config.getSessionStorage();
@@ -189,7 +197,7 @@ public class PushClient implements Client, AckCallBack {
         }
         logger.w("SessionStorage:" + ss);
 
-        PersistentSession session = PersistentSession.decode(ss);
+        PersistentSession session = PersistentSession.decode(ss);//检验session的有效性
         if (session == null || session.isExpired()) {
             storage.clearSession();
             logger.w("fast connect failure session expired, session=%s", session);
@@ -214,10 +222,13 @@ public class PushClient implements Client, AckCallBack {
         connection.getSessionContext().changeCipher(session.cipher);
     }
 
+    /**
+     * Handshake的目的是为了生成会话密钥，同时会把生成好的密钥存储到redis，并把key返回给客户端，为快速重连使用
+     */
     @Override
     public void handshake() {
         SessionContext context = connection.getSessionContext();
-        context.changeCipher(CipherBox.INSTANCE.getRsaCipher());
+        context.changeCipher(CipherBox.INSTANCE.getRsaCipher());//更换成RSA加密
         HandshakeMessage message = new HandshakeMessage(connection);
         message.clientKey = CipherBox.INSTANCE.randomAESKey();//在这里随机生产一个随机数，用于AES加密
         message.iv = CipherBox.INSTANCE.randomAESIV();
@@ -236,7 +247,7 @@ public class PushClient implements Client, AckCallBack {
         );
         logger.w("<<< do handshake, message=%s", message);
         message.send();
-        context.changeCipher(new AesCipher(message.clientKey, message.iv));
+        context.changeCipher(new AesCipher(message.clientKey, message.iv));//更换AES
     }
 
     @Override

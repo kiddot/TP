@@ -36,6 +36,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
  */
 
 public final class TCPConnection implements Connection {
+    private static final String TAG = "TCPConnection";
     public enum State {connecting, connected, disconnecting, disconnected}
 
     private final AtomicReference<State> state = new AtomicReference<>(disconnected);
@@ -72,7 +73,7 @@ public final class TCPConnection implements Connection {
         this.state.set(connected);
         this.reader.startRead();
         logger.w("connection connected !!!");
-        listener.onConnected(client);
+        listener.onConnected(client);//当与服务器连接完成之后，进行快速连接
     }
 
     @Override
@@ -163,8 +164,8 @@ public final class TCPConnection implements Connection {
     }
 
     private boolean doConnect() {
-        List<String> address = allotClient.getServerAddress();
-        logger.w("你好丫" + address, address);
+        List<String> address = allotClient.getServerAddress();//这里获取一个地址集合，寻找一个可用的地址
+        logger.w(TAG + address, address);
         if (address != null && address.size() > 0) {
             for (int i = 0; i < address.size(); i++) {
                 String[] host_port = address.get(i).split(":");

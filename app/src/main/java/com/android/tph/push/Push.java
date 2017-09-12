@@ -14,6 +14,7 @@ import com.android.tph.api.http.HttpRequest;
 import com.android.tph.api.http.HttpResponse;
 import com.android.tph.api.push.PushContext;
 import com.android.tph.client.ClientConfig;
+import com.android.tph.demo.MainActivity;
 import com.android.tph.util.DefaultLogger;
 
 import java.util.concurrent.Future;
@@ -308,6 +309,7 @@ public class Push {
                     .setOsName(Constants.DEF_OS_NAME)
                     .setOsVersion(Build.VERSION.RELEASE)
                     .setClientVersion(clientVersion)
+                    .setSessionStorageDir(Push.class.getResource("/").getFile())
                     .setLogger(new PushLog())
                     .setLogEnabled(logEnabled);
         }

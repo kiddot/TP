@@ -20,6 +20,7 @@ import static com.android.tph.push.PushReceiver.ACTION_HEALTH_CHECK;
 
 
 /**
+ * 这是一个后台推送服务，推送和接收消息的基础服务，进一步可以考虑保活问题
  * Created by kiddo on 17-7-11.
  */
 
@@ -59,7 +60,7 @@ public class PushService extends Service implements ClientListener{
         logger.d("PushService: 启动");
         ClientConfig.I.setInternalListener(this);
         if (!Push.I.hasStarted()) {
-            Push.I.checkInit(this).create(this);
+            Push.I.checkInit(this).create(this);//在这里创建client
         }
         if (Push.I.hasStarted()) {
             if (PushReceiver.hasNetwork(this)) {
