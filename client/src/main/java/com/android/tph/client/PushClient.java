@@ -228,7 +228,7 @@ public class PushClient implements Client, AckCallBack {
     @Override
     public void handshake() {
         SessionContext context = connection.getSessionContext();
-        context.changeCipher(CipherBox.INSTANCE.getRsaCipher());//更换成RSA加密
+        context.changeCipher(CipherBox.INSTANCE.getRsaCipher());//更换成RSA加密,利用服务端的公钥进行加密
         HandshakeMessage message = new HandshakeMessage(connection);
         message.clientKey = CipherBox.INSTANCE.randomAESKey();//在这里随机生产一个随机数，用于AES加密
         message.iv = CipherBox.INSTANCE.randomAESIV();
